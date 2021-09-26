@@ -177,7 +177,8 @@ li p code {
 }
 
 body.darkmode li p code {
-  background-color: rgb(65, 65, 65);
+  background-color: rgb(40, 40, 1);
+  color: rgb(235, 219, 178);
 }
 
 /* blockquote */
@@ -271,8 +272,8 @@ body {
 }
 
 body.darkmode {
-  background: rgb(34, 34, 38);
-  color: rgb(230, 230, 230);
+  background: rgb(40, 40, 40);
+  color: rgb(235, 219, 178);
 }
 
 .trans {
