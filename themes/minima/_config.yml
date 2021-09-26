@@ -1,13 +1,13 @@
 #title in header
-title: "Hi Folks."
+title: "Aurelio Florez"
 
 #main info
 #owner
-owner: "I am Adi Sakti Jrs"
-email: test@test.test
-info: "A student and web developer from Indonesia 🇮🇩"
+owner: "I am Aurelio Florez"
+email: mail@aurelioflorez.com
+info: "A Computer Science student in Miami originaly from 🇪🇸"
 #description
-desc: "This is Minima, an undoubtedly simple and lightweight dark/light mode theme for Hexo. I created this from scratch using Skeleton CSS boilerplate. It only uses CSS and Vanilla JS, without using unnecessary third-party 'render-blocking' libraries! 😁"
+desc: "This would be my description or something"
 
 #menu
 menu:
@@ -28,13 +28,13 @@ usercss: css/user.css
 
 # social profile at the footer/bottom
 footer: true
-placename: Earth
-placelink: https://en.wikipedia.org/wiki/Earth
-github: https://github.com/adisaktijrs
-linkedin: https://linkedin.com/in/adisaktijrs
-twitter: https://twitter.com/adisaktijrs
-instagram: https://instagram.com/adisaktijrs
-stackoverflow: https://stackoverflow.com/story/tobiasreithmeier
+placename: Miami
+placelink: https://en.wikipedia.org/wiki/Miami
+github: https://github.com/aureliusf
+linkedin: https://linkedin.com/in/aurelioflorez
+twitter: https://twitter.com/aurelioflorez
+  #instagram: https://instagram.com/aurelioflorez
+  #stackoverflow: https://stackoverflow.com/story/tobiasreithmeier
 
 # Misc
 nanobar: /js/nanobar.min.js
@@ -51,4 +51,4 @@ article:
 
 # DISQUS comments (sign up to Disqus to get disqus_shortname)
 disqus_enabled: false
-disqus_shortname: https-adisaktijrs-github-io
+  #disqus_shortname: https-adisaktijrs-github-io
