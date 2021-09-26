@@ -4,8 +4,8 @@
 
 # Site
 title: Aurelio Florez
-subtitle: ''
-description: ''
+subtitle: 'Computer Science and small projects'
+description: 'Hello! I am a computer science student in Miami Originally from spain.'
 keywords:
 author: Aurelio Florez
 language: en
@@ -40,7 +40,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
