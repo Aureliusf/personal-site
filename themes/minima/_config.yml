@@ -20,7 +20,7 @@ max_post: 4
 
 # Colors use hex color without #
 # Theme color
-tcolor: 0FA0CE
+tcolor: d3869b
 
 # Define path to user css
 #(could be also located outside of theme)
@@ -32,7 +32,7 @@ footer: true
 placename: Miami
 placelink: https://en.wikipedia.org/wiki/Miami
 github: https://github.com/aureliusf
-linkedin: https://linkedin.com/in/aurelioflorez
+linkedin: https://linkedin.com/in/aurelio-florez-621560221
 twitter: https://twitter.com/aurelioflorez
   #instagram: https://instagram.com/aurelioflorez
   #stackoverflow: https://stackoverflow.com/story/tobiasreithmeier

@@ -1,7 +1,7 @@
 /* https://github.com/PrismJS/prism-themes/blob/master/themes/prism-vsc-dark-plus.css */
 pre[class*="language-"],
 code[class*="language-"] {
-  color: #282828;
+  color: #fbf1c7;
   font-size: 13px;
   text-shadow: none;
   font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono",
@@ -92,7 +92,7 @@ pre[class*="language-"] {
 .token.char,
 .token.builtin,
 .token.deleted {
-  color: #ce9178;
+  color: #fe8019;
 }
 
 .language-css .token.string.url {
@@ -129,7 +129,7 @@ pre[class*="language-"] {
 }
 
 .token.keyword {
-  color: #569cd6;
+  color: #b8bb26;
 }
 
 .token.keyword.module,
@@ -139,7 +139,7 @@ pre[class*="language-"] {
 
 .token.function,
 .token.function .token.maybe-class-name {
-  color: #dcdcaa;
+  color: #b16286;
 }
 
 .token.regex {
@@ -160,7 +160,7 @@ pre[class*="language-"] {
 
 .token.class-name,
 .token.maybe-class-name {
-  color: #4ec9b0;
+  color: #b16286;
 }
 
 .token.console {
@@ -168,7 +168,7 @@ pre[class*="language-"] {
 }
 
 .token.parameter {
-  color: #9cdcfe;
+  color: #b8bb26;
 }
 
 .token.interpolation {
@@ -180,7 +180,7 @@ pre[class*="language-"] {
 }
 
 .token.boolean {
-  color: #569cd6;
+  color: #b16286;
 }
 
 .token.property,
