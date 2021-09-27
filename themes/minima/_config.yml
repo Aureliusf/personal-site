@@ -6,9 +6,10 @@ title: "Aurelio Florez"
 owner: "I am Aurelio Florez"
 email: mail@aurelioflorez.com
 info: "A Computer Science student in Miami originaly from 🇪🇸"
+pronouns: "he/him"
 #description
-desc: "My dream job would be building recommendation algorithms at large scale. I love the intricacy of monitoring these systems and I am a fan of efficiency." 
-desc2: "For now most of my time outside studying is spent tinkering my linux rice and building keyboards."
+desc: "My dream job would be building recommendation algorithms at large scale. I love the intricacy of monitoring these systems and I am a fan of efficiency and scalability." 
+desc2: "For now most of my time outside studying is spent tinkering my linux rice, building keyboards or brewing coffee."
 
 #menu
 menu:
@@ -30,7 +31,7 @@ usercss: css/user.css
 # social profile at the footer/bottom
 footer: true
 placename: Miami
-placelink: https://en.wikipedia.org/wiki/Miami
+  #placelink: https://en.wikipedia.org/wiki/Miami
 github: https://github.com/aureliusf
 linkedin: https://linkedin.com/in/aurelio-florez-621560221
 twitter: https://twitter.com/aurelioflorez
