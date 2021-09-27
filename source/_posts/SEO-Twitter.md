@@ -22,7 +22,7 @@ That is why it is so important to fine tune your botnet not to get banned.
 
 ## Implementing
 
-Implementing [Twitter's API](https://developer.twitter.com/en/docs/twitter-api) is fairly easy with one account; if you want to do it with multiple, you'll have to have a database with all the credentials for each account. And don't get me started with generating all the credentials for every account 🤧. 
+Implementing [Twitter's API](https://developer.twitter.com/en/docs/twitter-api) is fairly easy with one account; if you want to do it with multiple, you'll have to have a database with all the credentials for each account. And don't get me started with generating all the credentials for every account 🙄. 
 
 I used a python wrapper for Twitter's API, simply called [twitter](https://pypi.org/project/twitter/). With this, you only need to give it the correct credentials and my content to publish tweets.
 
