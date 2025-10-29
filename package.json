@@ -1,6 +1,7 @@
 {
   "name": "aurelio-florez",
   "version": "0.1.0",
+  "packageManager": "yarn@1.22.22"
   "private": true,
   "scripts": {
     "build": "hexo generate",
