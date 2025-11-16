@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- Minima -->
+  <!-- Hexo theme created by @adisaktijrs -->
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+
+  
+  <title>Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network</title>
+  
+  <link rel="canonical" href="http://aurelioflorez.com/2025/11/10/saradm.com-Fashion-Portfolio-Site/">
+  
+  <meta name="description" content="This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS">
+  
+  
+  <meta name="author" content="Aurelio Florez">
+  
+  <meta property="og:image" content="http://aurelioflorez.comundefined">
+  
+  <meta property="og:site_name" content="Aurelio Florez" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network" />
+  
+  <meta property="og:description" content="This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS">
+  
+  <meta property="og:url" content="http://aurelioflorez.com/2025/11/10/saradm.com-Fashion-Portfolio-Site/" />
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network">
+  
+  <meta name="twitter:description" content="This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS">
+  
+  
+  <meta name="twitter:image" content="http://aurelioflorez.comundefined">
+  
+  <meta name="twitter:url" content="http://aurelioflorez.com/2025/11/10/saradm.com-Fashion-Portfolio-Site/" />
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Preload fonts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="preload" href="../fonts/dm-serif-display-v4-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/inter-v2-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+<link rel="stylesheet" href="/css/normalize.css">
+
+  
+<link rel="stylesheet" href="/css/skeleton.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+<link rel="stylesheet" href="/css/prism-dark.css">
+
+  
+<link rel="stylesheet" href="/css/prism-line-numbers.css">
+
+  <!-- User css -->
+  
+  
+<link rel="stylesheet" href="/css/user.css">
+
+  
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+
+  <!-- Custom Theme Color Style
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <style>
+  a:not(.icon) {
+    text-decoration-color: #d3869b;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      #d3869b 50%
+    );
+  }
+  blockquote {
+    border-left: 8px solid #d3869b;
+  }
+  .nanobar .bar {
+    background: #d3869b;
+  }
+  .button.button-primary:hover,
+  button.button-primary:hover,
+  input[type="submit"].button-primary:hover,
+  input[type="reset"].button-primary:hover,
+  input[type="button"].button-primary:hover,
+  .button.button-primary:focus,
+  button.button-primary:focus,
+  input[type="submit"].button-primary:focus,
+  input[type="reset"].button-primary:focus,
+  input[type="button"].button-primary:focus {
+    background-color: #d3869b;
+    border-color: #d3869b;
+  }
+  input[type="email"]:focus,
+  input[type="number"]:focus,
+  input[type="search"]:focus,
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  input[type="url"]:focus,
+  input[type="password"]:focus,
+  textarea:focus,
+  select:focus {
+    border: 1px solid #d3869b;
+  }
+</style>
+
+  <!-- Google Analytics (With Privacy Settings On)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+
+        <div class="row">
+  <div class="two columns" style="max-width: 50px">
+    <h1 class="mt-2 mode">
+      <div onclick=setDarkMode(true) id="darkBtn">🌑</div>
+      <div onclick=setDarkMode(false) id="lightBtn" class=hidden>☀️</div>
+      <script >
+        if (localStorage.getItem('preferredTheme') == 'dark') {
+          setDarkMode(true)
+        }
+        function setDarkMode(isDark) {
+          var darkBtn = document.getElementById('darkBtn')
+          var lightBtn = document.getElementById('lightBtn')
+          if (isDark) {
+            lightBtn.style.display = "block"
+            darkBtn.style.display = "none"
+            localStorage.setItem('preferredTheme', 'dark');
+          } else {
+            lightBtn.style.display = "none"
+            darkBtn.style.display = "block"
+            localStorage.removeItem('preferredTheme');
+          }
+          document.body.classList.toggle("darkmode");
+        }
+      </script>
+    </h1>
+  </div>
+
+      <div class="six columns ml-1">
+        <h1 class="mt-2">
+          Aurelio Florez
+        </h1>
+      </div>
+      <!-- <p class="mt-2">he/him</p> -->
+  <div class="twelve columns">
+    <div class="row">
+      <div class="nine columns left">
+        <a href="/">Home</a>
+        
+          
+          <a href="/archives" class="ml">Works</a>
+          
+        
+          
+          <a href="/Aurelio-Florez-resume.pdf" class="ml">Resume</a>
+          
+        
+        
+          
+            <a href="mailto:mail@aurelioflorez.com" target="_blank" class="ml">Email</a>
+          
+        
+      </div>
+    </div>
+    <hr style="margin-bottom: 2.6rem">
+  </div>
+</div>
+
+        <div class="trans">
+            <h2>Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network</h2>
+
+  <p>This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS with the flexibility of Astro as a Frontend to deliver a great user experience for the visitor, the stylist making the content, and for myself maintaining the site. I deployed the site on Cloudflare Pages, utilizing serverless functions for the contact form which I built in TypeScript and integrated with Resend’s RESTful API.</p>
+<h2 id="Technical-Stack"><a href="#Technical-Stack" class="headerlink" title="Technical Stack"></a>Technical Stack</h2><ul>
+<li><strong>Frontend Framework:</strong> <a target="_blank" rel="noopener" href="https://astro.build/">Astro</a></li>
+<li><strong>UI Library:</strong> <a target="_blank" rel="noopener" href="https://react.dev/">React</a> (for interactive components)</li>
+<li><strong>Styling:</strong> <a target="_blank" rel="noopener" href="https://tailwindcss.com/">Tailwind CSS</a></li>
+<li><strong>Headless CMS:</strong> <a target="_blank" rel="noopener" href="https://www.sanity.io/">Sanity.io</a></li>
+<li><strong>Deployment &amp; Hosting:</strong> <a target="_blank" rel="noopener" href="https://pages.cloudflare.com/">Cloudflare Pages</a></li>
+<li><strong>Email Service:</strong> <a target="_blank" rel="noopener" href="https://resend.com/">Resend</a></li>
+</ul>
+<h2 id="Architectural-Highlights-Key-Features"><a href="#Architectural-Highlights-Key-Features" class="headerlink" title="Architectural Highlights &amp; Key Features"></a>Architectural Highlights &amp; Key Features</h2><p>I architected this project with the main goal of enabling the end-user (the stylist) to admin the contents, while keeping the site fast, maintainable, and scalable from a development perspective. To achieve this, I used a blend of static site generation and serverless computing.</p>
+<h3 id="1-Hybrid-Architecture-with-Astro"><a href="#1-Hybrid-Architecture-with-Astro" class="headerlink" title="1. Hybrid Architecture with Astro"></a>1. Hybrid Architecture with Astro</h3><p>I built the frontend core of the site with Astro, which I chose for its excellent performance and wide compatibility for different sources. I configured the architecture for server-side rendering to support dynamic API routes while pre-rendering static pages for optimal load times.<br>This hybrid approach provided the best of both worlds: the speed of static sites for content and the flexibility of server-rendered applications for user-interactable pages. Every post gets generated at build time from a queries to the sanity.io CMS.</p>
+<p>The site has two types of pages:</p>
+<ul>
+<li><strong>Static Pages:</strong> Astro statically generates most pages (<code>index</code>, <code>posts</code>, <code>[slug]</code>) at build time, ensuring near-instant delivery from Cloudflare’s edge network around the world.</li>
+<li><strong>Dynamic API Routes:</strong> I wrote a serverless API endpoint (<code>/api/contact.ts</code>) to handle form submissions without requiring a traditional backend server.</li>
+</ul>
+<h3 id="2-Headless-CMS-for-Content-Management"><a href="#2-Headless-CMS-for-Content-Management" class="headerlink" title="2. Headless CMS for Content Management"></a>2. Headless CMS for Content Management</h3><p>I used Sanity.io to manage all project content, including text and images. This decouples the content from the presentation layer, allowing the stylist to update their portfolio without needing my intervention, following the JAMstack philosophy. Astro fetches this content at build time to generate the static pages.</p>
+<p>Hosting all the images in Sanity.io allows me to use Sanity’s CDN to serve images at the right size and anywhere in the world.</p>
+<h3 id="3-Serverless-Contact-Form"><a href="#3-Serverless-Contact-Form" class="headerlink" title="3. Serverless Contact Form"></a>3. Serverless Contact Form</h3><p>To handle user inquiries, I implemented a secure and robust contact form:</p>
+<ul>
+<li><p><strong>Frontend:</strong> I used a React component (<code>ContactForm.jsx</code>) to provide a modern, interactive user experience with client-side validation. The component manages form state, handles user input, and communicates with the backend API.</p>
+</li>
+<li><p><strong>Backend:</strong> I wrote an Astro API route that acts as a serverless function deployed on Cloudflare. It receives the form data, validates it, and uses the Resend API to send the email.</p>
+</li>
+<li><p><strong>Security:</strong> I managed API keys and environment variables securely using Cloudflare’s environment variable system, accessing them via <code>locals.runtime.env</code> in the Astro backend to prevent exposure on the client-side.</p>
+</li>
+</ul>
+<h3 id="4-Responsive-Design-Image-Optimization"><a href="#4-Responsive-Design-Image-Optimization" class="headerlink" title="4. Responsive Design &amp; Image Optimization"></a>4. Responsive Design &amp; Image Optimization</h3><p>With users being all around the world and interested in fashion, a major focus for me was creating a visually consistent and responsive experience across all devices.</p>
+<ul>
+<li><strong>Tailwind CSS:</strong> I used a utility-first approach for rapid, maintainable styling. I configured custom styles to keep a specific color palette across the whole site in <code>tailwind.config.js</code>.</li>
+<li><strong>Responsive Image Loading:</strong> I used the Astro <code>Image</code> component to implement <code>srcset</code> and <code>sizes</code> attributes. This ensures that browsers download the most appropriately sized image based on the device’s viewport and resolution, significantly improving performance and reducing bandwidth.</li>
+<li><strong>Dynamic Layouts:</strong> I designed the project gallery with layouts that dynamically adjust based on content, such as aligning text based on the position of the corresponding image and different columns for big screens or mobile.</li>
+</ul>
+<h2 id="Development-Process-Problem-Solving"><a href="#Development-Process-Problem-Solving" class="headerlink" title="Development Process &amp; Problem-Solving"></a>Development Process &amp; Problem-Solving</h2><p>My development process was iterative, focusing on building features, fixing bugs, and continuous refinement.</p>
+<ul>
+<li><p><strong>Client-Side Interactivity:</strong> A key challenge I faced was implementing a tag-based filtering system on the <code>/posts</code> page that worked seamlessly with Astro’s view transitions. The initial script I wrote failed on navigation, but I resolved this by leveraging Astro’s <code>astro:page-load</code> event and the <code>is:inline</code> script attribute. This ensured the filter logic re-initialized correctly on each page load.</p>
+<pre><code class="highlight javascript"><span class="comment">// src/pages/posts.astro</span>
+<span class="keyword">const</span> filterContainer = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;tag-filters&#x27;</span>);
+<span class="keyword">const</span> postItems = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.post-item&#x27;</span>);
+
+<span class="keyword">if</span> (filterContainer) &#123;
+  filterContainer.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;
+    <span class="keyword">const</span> target = e.<span class="property">target</span> <span class="keyword">as</span> <span class="title class_">HTMLElement</span>;
+    <span class="keyword">if</span> (target.<span class="property">classList</span>.<span class="title function_">contains</span>(<span class="string">&#x27;tag-button&#x27;</span>)) &#123;
+      <span class="comment">// ... code to update active button style ...</span>
+
+      <span class="keyword">const</span> selectedTag = target.<span class="property">dataset</span>.<span class="property">tag</span>;
+
+      postItems.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;
+        <span class="keyword">const</span> post = item <span class="keyword">as</span> <span class="title class_">HTMLElement</span>;
+        <span class="keyword">const</span> postTags = post.<span class="property">dataset</span>.<span class="property">tags</span> ? post.<span class="property">dataset</span>.<span class="property">tags</span>.<span class="title function_">split</span>(<span class="string">&#x27;,&#x27;</span>) : [];
+        
+        <span class="keyword">if</span> (selectedTag === <span class="string">&#x27;all&#x27;</span> || postTags.<span class="title function_">includes</span>(<span class="title class_">String</span>(selectedTag))) &#123;
+          post.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;block&#x27;</span>;
+        &#125; <span class="keyword">else</span> &#123;
+          post.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;
+        &#125;
+      &#125;);
+    &#125;
+  &#125;);
+&#125;</code></pre>
+</li>
+<li><p><strong>Build &amp; Rendering:</strong> Early in development, I migrated the project from a purely static output to a server-rendered output (<code>output: &#39;server&#39;</code>) to accommodate the serverless API route for the contact form. I marked specific pages not requiring server-side logic for pre-rendering to maintain performance benefits.</p>
+</li>
+</ul>
+<p>This project demonstrates my strong understanding of modern web development principles, including JAMstack architecture, performance optimization, and the integration of disparate services (CMS, email) into a cohesive, serverless application.</p>
+
+  <p> — Nov 10, 2025</p>
+  
+
+
+          <div class="row mt-2">
+  
+    <div class="eight columns">
+      <p id="madewith">Made with ❤ and
+        <a class="footer-link icon" href="https://hexo.io" target="_blank" style="text-decoration: none;" rel="noreferrer" aria-label="Hexo.io">
+        <svg class="hexo svg-hov" width="14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Hexo.js</title><path d="M12 .007L1.57 6.056V18.05L12 23.995l10.43-6.049V5.952L12 .007zm4.798 17.105l-.939.521-.939-.521V12.94H9.08v4.172l-.94.521-.938-.521V6.89l.939-.521.939.521v4.172h5.84V6.89l.94-.521.938.521v10.222z"/></svg>
+        </a>
+        
+        at Miami.</p>
+        
+    </div>
+
+    <!-- Special thanks to https://simpleicons.org/ for the icons -->
+    <div class="four columns mb-3 posisi" >
+      
+      <a class="ml-0 footer-link icon" href="https://github.com/aureliusf" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="GitHub">
+        <svg class="github svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      
+
+      
+      <a class="ml-0 footer-link icon" href="https://linkedin.com/in/aurelio-florez-621560221" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="LinkedIn">
+        <svg class="linkedin svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      
+
+      
+      <a class="ml-0 footer-link icon" href="https://twitter.com/aurelioflorez" target="_blank" style="text-decoration: none" rel="noreferrer" aria-label="Twitter">
+        <svg class="twitter svg-hov" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Twitter</title><path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"/></svg>
+      </a>
+      
+
+    </div>
+  
+</div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <script src="/js/nanobar.min.js"></script>
+  <script>
+    var options = {
+      classname: 'nanobar',
+      id: 'myNanobar'
+    };
+    var nanobar = new Nanobar(options);
+    nanobar.go(30);
+    nanobar.go(76);
+    nanobar.go(100);
+  </script>
+
+</body>
+
+</html>

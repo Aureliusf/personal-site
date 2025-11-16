@@ -101,7 +101,7 @@ I started using Serveo with worked great BUT it would disconnect at once a day e
 I chose to use Vultr with the cheapest possible VPS. It runs nginx in an AlmaLinux system.
 
 This is the flow for a given user:
-````mermaid
+```mermaid
 graph TD
     A[Client Browser] -->|HTTP/S Request| B(base.org.es)
     B -->|"DNS Resolution (Vultr)"| C[Vultr Instance]
@@ -129,7 +129,7 @@ graph TD
     click F "Local machine receives forwarded traffic from SSH tunnel"
     click G "n8n server receives traffic on its local port"
 
-````
+```
 This way I don't need to open any ports in my local network and open my homelab this way. With this ssh tunnel, traffic should only be able to access what is served on the local port is pointed to and nothing else. 
 
 This means that I am unable to ssh into my n8n-server through base.org.es at all even though sshd is running, even from one of the whitelisted IPs.
