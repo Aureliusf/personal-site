@@ -54,7 +54,57 @@ With users being all around the world and interested in fashion, a major focus f
 
 ## Development Process & Problem-Solving
 
-My development process was iterative, focusing on building features, fixing bugs, and continuous refinement.
+My development process was iterative, focusing on building features, fixing bugs, and continuous refinement with immediate feedback from the Stylist.
+
+-   **Build & Rendering:** Early in development, I migrated the project from a purely static output to a server-rendered output (`output: 'server'`) to accommodate the serverless API route for the contact form. I marked specific pages not requiring server-side logic for pre-rendering to maintain performance benefits.
+
+- **Serving Images**: One of the most important features of the site is serving multiple images on the same page while keeping loading times as fast as possible. This is one of the reasons I choose Simply.io as the CMS since it integrates an image CDN that allows the site to request only the pictures that are needed at the resolution they are needed. The site being a image heavy one, picture quality must be really high and bandwidth savings is not a priority. 
+  I wrote a simple srcset implementation to handle this in addition to programmatically request the different sizes for my pictures with the helper functions below.
+
+    ````javascript
+    // src/pages/[slug].astro
+    // Gallery lazy loading
+    {post.gallery && Array.isArray(post.gallery) && post.gallery.length > 0 && (
+      <div class="py-8">
+                <div class="  gap-1 grid grid-cols-1 sm:grid-cols-2">
+                  {post.gallery.map((imageWithAlt: { image: SanityImageSource; alt?: string }) => {
+                    if (!imageWithAlt.image) return null;
+                    const imageProps = generateImageProps(imageWithAlt.image);
+                    return (
+                      <img
+                        src={imageProps.src}
+                        srcset={imageProps.srcset}
+                        sizes={imageProps.sizes}
+                        alt={imageWithAlt.alt || ""}
+                        class=" w-full h-auto"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+    // [...]
+
+    // Helper Functions
+    {
+    const builder = imageUrlBuilder(sanityClient);
+    function urlFor(source: SanityImageSource) {
+      return builder.image(source);
+    }
+    function generateImageProps(image: SanityImageSource) {
+      const base = urlFor(image).quality(90).auto('format');
+      return {
+        src: base.width(800).url(),
+        srcset: [400, 800, 1200]
+          .map(w => `${base.width(w).url()} ${w}w`)
+          .join(', '),
+        sizes: '(min-width: 640px) 50vw, 100vw',
+      };
+    }
+    ````
 
 -   **Client-Side Interactivity:** A key challenge I faced was implementing a tag-based filtering system on the `/posts` page that worked seamlessly with Astro's view transitions. The initial script I wrote failed on navigation, but I resolved this by leveraging Astro's `astro:page-load` event and the `is:inline` script attribute. This ensured the filter logic re-initialized correctly on each page load.
 
@@ -86,6 +136,5 @@ My development process was iterative, focusing on building features, fixing bugs
     }
     ````
 
--   **Build & Rendering:** Early in development, I migrated the project from a purely static output to a server-rendered output (`output: 'server'`) to accommodate the serverless API route for the contact form. I marked specific pages not requiring server-side logic for pre-rendering to maintain performance benefits.
 
 This project demonstrates my strong understanding of modern web development principles, including JAMstack architecture, performance optimization, and the integration of disparate services (CMS, email) into a cohesive, serverless application.

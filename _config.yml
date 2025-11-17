@@ -50,7 +50,7 @@ highlight:
   tab_replace: ''
   wrap: false #false
   hljs: false
-prismjs:
+prism_plugin:
   enable: true
   preprocess: true
   line_number: true
