@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+
+type Props = CollectionEntry<'posts'>['data'] & {
+  slug: string;
+};
+
+const { title, date, tags } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={title}>
+  <article class="prose prose-gray dark:prose-invert max-w-none">
+    <header class="mb-8 not-prose">
+      <h1 class="text-3xl md:text-4xl font-serif mb-2">{title}</h1>
+      <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        {tags && tags.length > 0 && (
+          <div class="flex gap-2">
+            {tags.map((tag) => (
+              <a href={`/tags/${tag}`} class="text-theme hover:underline">#{tag}</a>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <slot />
+  </article>
+</BaseLayout>

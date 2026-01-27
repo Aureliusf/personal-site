@@ -1,0 +1,115 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  body {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  .prose pre {
+    @apply bg-[#282c34] rounded-lg overflow-x-auto p-4 my-4;
+  }
+
+  .prose code {
+    @apply font-mono text-sm;
+  }
+
+  .prose img {
+    @apply rounded-lg shadow-md my-6;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-theme pl-4 italic my-4 text-gray-700 dark:text-gray-300;
+  }
+
+  img[alt$=">"] {
+    @apply float-right ml-4 mb-4;
+  }
+
+  img[alt$="<"] {
+    @apply float-left mr-4 mb-4;
+  }
+
+  img[alt$="><"] {
+    @apply block mx-auto;
+  }
+
+  img[alt~="_gallery"] {
+    @apply inline-block w-[48%] my-2;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+}
+
+body.darkmode {
+  @apply bg-gray-900 text-gray-100;
+}
+
+body.darkmode img {
+  filter: brightness(0.85);
+}
+
+@layer utilities {
+  .mode .sun {
+    display: none;
+  }
+
+  .mode .moon {
+    display: block;
+  }
+
+  body:not(.darkmode) .mode .sun {
+    display: block;
+  }
+
+  body:not(.darkmode) .mode .moon {
+    display: none;
+  }
+}
+
+.social-icon {
+  @apply inline-block w-5 h-5 mr-1;
+}
+
+.social-icon:hover {
+  transform: translateY(-3px);
+}

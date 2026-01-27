@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostPreview from '../../components/PostPreview.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  const uniqueTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => (post.data.tags || []).includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+const sortedPosts = posts.sort(
+  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title={`#${tag} - Aurelio Florez`}>
+  <h1 class="text-3xl font-serif mb-8">#{tag}</h1>
+
+  <div class="space-y-6">
+    {sortedPosts.map((post) => (
+      <PostPreview post={post} />
+    ))}
+  </div>
+</BaseLayout>
