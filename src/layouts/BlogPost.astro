@@ -16,10 +16,10 @@ const formattedDate = date.toLocaleDateString('en-US', {
 ---
 
 <BaseLayout title={title} description={title}>
-  <article class="prose prose-gray dark:prose-invert max-w-none">
+  <article class="prose prose-stone dark:prose-invert max-w-none">
     <header class="mb-8 not-prose">
       <h1 class="text-3xl md:text-4xl font-serif mb-2">{title}</h1>
-      <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
+      <div class="flex items-center gap-4 text-[#7c6f64] dark:text-[#a89984] text-sm">
         <time datetime={date.toISOString()}>{formattedDate}</time>
         {tags && tags.length > 0 && (
           <div class="flex gap-2">

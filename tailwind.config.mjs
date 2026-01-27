@@ -5,7 +5,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        theme: '#d3869b',
+        bg: '#1d2021',
+        fg: '#ebdbb2',
+        theme: '#b16286',
+        red: '#cc241d',
+        green: '#98971a',
+        yellow: '#d79921',
+        blue: '#458588',
+        aqua: '#689d6a',
+        orange: '#fe8019',
+        gray: '#a89984',
       },
       fontFamily: {
         serif: ['DM Serif Display', 'serif'],

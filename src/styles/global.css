@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200;
+    @apply bg-[#fbf1c7] text-[#1d2021] dark:bg-[#1d2021] dark:text-[#ebdbb2] transition-colors duration-200;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -30,7 +30,7 @@
   }
 
   .prose blockquote {
-    @apply border-l-4 border-theme pl-4 italic my-4 text-gray-700 dark:text-gray-300;
+    @apply border-l-4 border-theme pl-4 italic my-4 text-[#7c6f64] dark:text-[#d5c4a1];
   }
 
   img[alt$=">"] {
@@ -68,20 +68,20 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-[#fbf1c7] dark:bg-[#1d2021];
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply bg-[#d5c4a1] dark:bg-[#458588] rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-[#bdae93] dark:bg-[#689d6a] rounded-full;
   }
 }
 
 body.darkmode {
-  @apply bg-gray-900 text-gray-100;
+  @apply bg-[#1d2021] text-[#ebdbb2];
 }
 
 body.darkmode img {
@@ -112,4 +112,16 @@ body.darkmode img {
 
 .social-icon:hover {
   transform: translateY(-3px);
+}
+
+.prose a {
+  @apply text-theme no-underline hover:underline;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply text-[#1d2021] dark:text-[#ebdbb2];
+}
+
+.prose strong {
+  @apply text-theme;
 }
