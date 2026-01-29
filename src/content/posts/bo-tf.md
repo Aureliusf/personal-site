@@ -2,6 +2,7 @@
 title: bo.tf
 date: 2020-01-01 23:17:07
 tags:
+featured: true
 ---
 bo.tf is a url shortener that I made back in 2018 as a weekend project.
 

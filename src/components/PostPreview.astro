@@ -13,18 +13,22 @@ const formattedDate = date.toLocaleDateString('en-US', {
   month: 'short',
   day: 'numeric',
 });
+
+const slug = post.slug;
 ---
 
-<article class="mb-8">
-  <h2 class="text-xl font-serif mb-1">
-    <a href={`/posts/${post.slug}`} class="hover:text-theme transition-colors">
-      {title}
-    </a>
-  </h2>
-  <div class="flex items-center gap-3 text-sm text-[#7c6f64] dark:text-[#a89984] mb-2">
-    <time datetime={date.toISOString()}>{formattedDate}</time>
-    {tags && tags.length > 0 && (
-      <span class="text-theme">#{tags.join(', #')}</span>
-    )}
-  </div>
+<article class="post-item">
+  <time datetime={date.toISOString()} class="post-date">{formattedDate}</time>
+  <a href={`/posts/${slug}`} class="post-title hover:text-[var(--accent)] link-underline">
+    {title}
+  </a>
+  {tags && tags.length > 0 && (
+    <span class="post-tags hidden sm:block">
+      {tags.map((tag: string, i: number) => (
+        <span>
+          #{tag}{i < tags.length - 1 ? ', ' : ''}
+        </span>
+      ))}
+    </span>
+  )}
 </article>

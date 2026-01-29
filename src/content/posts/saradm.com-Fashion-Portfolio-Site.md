@@ -2,6 +2,7 @@
 title: "Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network"
 date: 2025-11-10 15:59:22
 tags:
+featured: true
 ---
 
 This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS with the flexibility of Astro as a Frontend to deliver a great user experience for the visitor, the stylist making the content, and for myself maintaining the site. I deployed the site on Cloudflare Pages, utilizing serverless functions for the contact form which I built in TypeScript and integrated with Resend's RESTful API.

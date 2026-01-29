@@ -2,6 +2,7 @@
 title: Spotify-analyzer
 date: 2021-03-26 20:43:42
 tags:
+featured: true
 ---
 # Spotify-analyzer
  This is a program that analyzes entire albums with [Spotify's stats](https://developer.spotify.com/documentation/web-api/reference/tracks/get-several-audio-features/).
