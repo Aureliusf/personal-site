@@ -1,7 +1,7 @@
 ---
 title: Spotify-analyzer
 date: 2021-03-26 20:43:42
-tags:
+tags: ["Python","Pandas"]
 featured: true
 ---
 # Spotify-analyzer

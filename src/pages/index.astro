@@ -29,6 +29,21 @@ const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) =>
 const recentPosts = allPosts
   .filter((post: CollectionEntry<'posts'>) => !featuredSlugs.has(post.slug))
   .slice(0, 6);
+
+const allTags = allPosts
+  .flatMap((post: CollectionEntry<'posts'>) => post.data.tags || [])
+  .filter((tag): tag is string => tag !== null && tag !== undefined)
+  .filter((tag) => tag !== 'featured');
+
+const tagCounts = allTags.reduce((acc, tag) => {
+  acc[tag] = (acc[tag] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+const uniqueTags = Object.entries(tagCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(([tag]) => tag);
 ---
 
 <BaseLayout title="Aurelio Florez">
@@ -98,7 +113,7 @@ const recentPosts = allPosts
           Tech Stack
         </h3>
         <div class="flex flex-wrap gap-2">
-          {['TypeScript', 'Astro', 'React', 'Node.js', 'Python', 'PostgreSQL', 'Docker', 'Cloudflare'].map((skill) => (
+          {uniqueTags.map((skill) => (
             <span class="tag">{skill}</span>
           ))}
         </div>
