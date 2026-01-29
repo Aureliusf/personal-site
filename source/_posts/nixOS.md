@@ -2,6 +2,7 @@
 title: Serve n8n publicly with nixOS
 date: 2025-06-25 15:59:22
 tags:
+featured: true
 ---
 
 # Serve n8n with nixOS
