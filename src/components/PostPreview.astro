@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  post: CollectionEntry<'posts'>;
+};
+
+const { post } = Astro.props;
+const { title, date, tags } = post.data;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+const slug = post.slug;
+---
+
+<article class="post-item">
+  <time datetime={date.toISOString()} class="post-date">{formattedDate}</time>
+  <a href={`/posts/${slug}`} class="post-title hover:text-[var(--accent)] link-underline">
+    {title}
+  </a>
+  {tags && tags.length > 0 && (
+    <span class="post-tags hidden sm:block">
+      {tags.map((tag: string, i: number) => (
+        <span>
+          #{tag}{i < tags.length - 1 ? ', ' : ''}
+        </span>
+      ))}
+    </span>
+  )}
+</article>

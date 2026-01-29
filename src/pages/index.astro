@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostPreview from '../components/PostPreview.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const allPosts = (await getCollection('posts')).sort(
+  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const featuredPosts = allPosts
+  .filter((post: CollectionEntry<'posts'>) => post.data.featured)
+  .slice(0, 3);
+
+const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
+  const year = post.data.date.getFullYear();
+  const tags = post.data.tags || [];
+  const techStack = tags.slice(0, 3).join(' + ');
+  const meta = `${year} ${techStack ? '· ' + techStack : ''}`;
+  return {
+    slug: post.slug,
+    title: post.data.title,
+    meta: meta,
+    desc: tags.length > 0 ? tags[0] : 'View project details →'
+  };
+});
+
+const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) => p.slug));
+const recentPosts = allPosts
+  .filter((post: CollectionEntry<'posts'>) => !featuredSlugs.has(post.slug))
+  .slice(0, 6);
+
+const allTags = allPosts
+  .flatMap((post: CollectionEntry<'posts'>) => post.data.tags || [])
+  .filter((tag): tag is string => tag !== null && tag !== undefined)
+  .filter((tag) => tag !== 'featured');
+
+const tagCounts = allTags.reduce((acc, tag) => {
+  acc[tag] = (acc[tag] || 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+const uniqueTags = Object.entries(tagCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(([tag]) => tag);
+---
+
+<BaseLayout title="Aurelio Florez">
+  <section class="mb-12 pb-8 border-b border-[var(--border)]">
+    <div class="max-w-3xl">
+      <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">
+        Developer & Computer Science Student
+      </h1>
+      <p class="text-[var(--text-secondary)] leading-relaxed mb-4">
+        Building products users love with rock-solid, predictable, and declarable solutions. 
+        I focus on full-stack development, distributed systems, and creating maintainable codebases.
+      </p>
+      <p class="text-[var(--text-muted)] text-sm">
+        Currently exploring web technologies, system design, and the intersection of 
+        performance and developer experience.
+      </p>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="lg:col-span-8">
+      {featuredPostData.length > 0 && (
+        <section class="mb-12">
+          <h2 class="section-header mb-6">Featured Projects</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featuredPostData.map((item) => (
+              <a href={`/posts/${item.slug}`} class="project-item card-hover hover-glow">
+                <div class="project-title link-underline">
+                  {item.title}
+                </div>
+                <div class="project-meta">{item.meta}</div>
+                <div class="project-desc">{item.desc}</div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="section-header">Recent Posts</h2>
+          <a href="/archives" class="text-sm text-[var(--text-muted)] hover:text-[var(--accent)] link-underline transition-colors">
+            View all →
+          </a>
+        </div>
+        <div class="border-t border-[var(--border)]">
+          {recentPosts.map((post: CollectionEntry<'posts'>) => (
+            <PostPreview post={post} />
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <aside class="lg:col-span-4 space-y-8">
+      <section class="content-block card-hover">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
+          About
+        </h3>
+        <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
+          Computer Science student with hands-on web development experience. 
+          I enjoy working on small projects, tweaking environments, and learning new technologies.
+        </p>
+      </section>
+
+      <section class="content-block card-hover">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
+          Tech Stack
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {uniqueTags.map((skill) => (
+            <span class="tag">{skill}</span>
+          ))}
+        </div>
+      </section>
+
+      <section class="content-block card-hover">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
+          Connect
+        </h3>
+        <div class="space-y-2 text-sm">
+          <a href="https://github.com/aureliusf" class="block text-[var(--text-secondary)] hover:text-[var(--accent)] link-underline transition-colors" target="_blank" rel="noopener noreferrer">
+            github.com/aureliusf
+          </a>
+          <a href="https://linkedin.com/in/aurelio-florez-621560221" class="block text-[var(--text-secondary)] hover:text-[var(--accent)] link-underline transition-colors" target="_blank" rel="noopener noreferrer">
+            linkedin.com/in/aurelio-florez
+          </a>
+          <a href="/resume.pdf" class="block text-[var(--text-secondary)] hover:text-[var(--accent)] link-underline transition-colors">
+            Download Resume
+          </a>
+        </div>
+      </section>
+    </aside>
+  </div>
+</BaseLayout>

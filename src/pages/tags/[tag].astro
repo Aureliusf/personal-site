@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostPreview from '../../components/PostPreview.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  const uniqueTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => (post.data.tags || []).includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+
+const sortedPosts = posts.sort(
+  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title={`#${tag} - Aurelio Florez`}>
+  <div class="mb-8 pb-6 border-b border-[var(--border)]">
+    <h1 class="text-2xl font-semibold mb-2 text-[var(--text-primary)]">
+      <span class="text-[var(--accent)]">#</span>{tag}
+    </h1>
+    <p class="text-[var(--text-muted)] text-sm">
+      {sortedPosts.length} {sortedPosts.length === 1 ? 'post' : 'posts'} tagged
+    </p>
+  </div>
+
+  <div class="border-t border-[var(--border)]">
+    {sortedPosts.map((post: CollectionEntry<'posts'>) => (
+      <PostPreview post={post} />
+    ))}
+  </div>
+
+  <div class="mt-8 pt-6 border-t border-[var(--border)]">
+    <a 
+      href="/archives" 
+      class="text-sm text-[var(--text-muted)] hover:text-[var(--accent)] link-underline transition-colors"
+    >
+      ← Back to archives
+    </a>
+  </div>
+</BaseLayout>
