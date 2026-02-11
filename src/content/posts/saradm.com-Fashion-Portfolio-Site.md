@@ -59,7 +59,7 @@ My development process was iterative, focusing on building features, fixing bugs
 
 -   **Build & Rendering:** Early in development, I migrated the project from a purely static output to a server-rendered output (`output: 'server'`) to accommodate the serverless API route for the contact form. I marked specific pages not requiring server-side logic for pre-rendering to maintain performance benefits.
 
-- **Serving Images**: One of the most important features of the site is serving multiple images on the same page while keeping loading times as fast as possible. This is one of the reasons I choose Simply.io as the CMS since it integrates an image CDN that allows the site to request only the pictures that are needed at the resolution they are needed. The site being a image heavy one, picture quality must be really high and bandwidth savings is not a priority. 
+- **Serving Images**: One of the most important features of the site is serving multiple images on the same page while keeping loading times as fast as possible. This is one of the reasons I choose Sanity.io as the CMS since it integrates an image CDN that allows the site to request only the pictures that are needed at the resolution they are needed. The site being a image heavy one, picture quality must be really high and bandwidth savings is not a priority. 
   I wrote a simple srcset implementation to handle this in addition to programmatically request the different sizes for my pictures with the helper functions below.
 
     ````javascript
@@ -137,5 +137,29 @@ My development process was iterative, focusing on building features, fixing bugs
     }
     ````
 
+## Performance and Uptime
+The site achieved excellent Lighthouse scores: 98 Performance, 100 Accessibility, 100 Best Practices, and 92 SEO (deductions due to pending content from the client).
 
-This project demonstrates my strong understanding of modern web development principles, including JAMstack architecture, performance optimization, and the integration of disparate services (CMS, email) into a cohesive, serverless application.
+![Lighthouse Score](/images/saradm.com-lighthouse.png)
+
+Regarding analytics, we choose to work with cloudflare analytics and have seen 30 to 65 unique visitors a day, totalling 1.1k visitors a month with virtually 0 errors after the development phase.
+
+### Uptime
+The site is on Cloudflare Pages, meaning the uptime is close to perfect. I have an [Uptime Kuma](https://github.com/louislam/uptime-kuma) instance running in my homelab and my recorded uptime is 99.9% from November 2025 to February 2026:
+![Uptime Monitor](/images/saradm.com-uptime.png)
+Note: 99.9% uptime reflects Cloudflare's infrastructure reliability; my local monitoring has brief gaps due to home network maintenance windows.
+
+This combination of high performance scores, reliable uptime, and real user traffic demonstrates a production-ready application serving actual business needs.
+
+## Final Thoughts
+
+This project started when a Sara needed a portfolio site. I showed her my Hexo setup, but the markdown workflow was a non-starter; she needed something visual and clickable, not code-based. That sent me looking for a modern stack that could match Hexo's speed and simplicity while giving her an actual CMS.
+
+From my time doing WordPress/WooCommerce work at an agency in Spain (2019-2021), I knew the pain of optimizing image-heavy WordPress sites on shared VPS hosting. With my friend splitting time between continents, a global CDN wasn't optional, it was a necessity.
+
+Astro felt right immediately: open-source, extensible, and it didn't fight me when I wanted to customize things. 
+Sanity gave her the visual editing experience she needed. 
+The webhook tied them together so content changes trigger rebuilds automatically. 
+Cloudflare Pages' generous free tier meant hosting costs are negligible while still providing enterprise-grade analytics and global edge delivery.
+
+The result speaks for itself: a client who can manage her own content, a site that loads fast anywhere in the world, and an architecture that's been running hands-off for months with 3 9s of uptime.
