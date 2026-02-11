@@ -1,7 +1,7 @@
 ---
 title: "Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network"
 date: 2025-11-10 15:59:22
-tags: ["JavaScript", "React", "Cloudflare Pages", "Tailwind CSS"]
+tags: [Astro, React, TypeScript, Sanity, Cloudflare, Tailwind]
 featured: true
 ---
 

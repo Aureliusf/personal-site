@@ -1,7 +1,7 @@
 ---
 title: Markdwon2Paper - Ship in 3 hours with Opencode
 date: 2025-06-25 15:59:22
-tags: ["TypeScript", "Obsidian","AI"]
+tags: [TypeScript, Obsidian, jspdf, "AI-Agents"]
 featured: true
 ---
 

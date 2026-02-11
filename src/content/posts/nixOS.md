@@ -1,7 +1,7 @@
 ---
 title: Serve n8n publicly with nixOS
 date: 2025-06-25 15:59:22
-tags: [nix, nixOS]
+tags: [nixOS, Docker, nginx, fail2ban]
 ---
 
 # Serve n8n with nixOS
