@@ -514,6 +514,14 @@
     line-height: 1.5;
   }
 
+  .project-metrics {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
   /* Footer links */
   .footer-link {
     font-size: 0.875rem;
