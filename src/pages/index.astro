@@ -10,7 +10,7 @@ const allPosts = (await getCollection('posts')).sort(
 
 const featuredPosts = allPosts
   .filter((post: CollectionEntry<'posts'>) => post.data.featured)
-  .slice(0, 3);
+  .slice(0, 4);
 
 const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
   const year = post.data.date.getFullYear();
@@ -27,8 +27,7 @@ const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
 
 const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) => p.slug));
 const recentPosts = allPosts
-  .filter((post: CollectionEntry<'posts'>) => !featuredSlugs.has(post.slug))
-  .slice(0, 6);
+  .slice(0, 10);
 
 const allTags = allPosts
   .flatMap((post: CollectionEntry<'posts'>) => post.data.tags || [])
@@ -113,7 +112,7 @@ const uniqueTags = Object.entries(tagCounts)
         </h3>
         <div class="flex flex-wrap gap-2">
           {uniqueTags.map((skill) => (
-            <span class="tag">{skill}</span>
+            <a href={`/tags/${skill}`} class="tag hover-scale">{skill}</a>
           ))}
         </div>
       </section>

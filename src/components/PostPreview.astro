@@ -25,9 +25,12 @@ const slug = post.slug;
   {tags && tags.length > 0 && (
     <span class="post-tags hidden sm:block">
       {tags.map((tag: string, i: number) => (
-        <span>
+        <a
+          href={`/tags/${tag}`}
+          class="hover:text-[var(--accent)] link-underline"
+        >
           #{tag}{i < tags.length - 1 ? ', ' : ''}
-        </span>
+        </a>
       ))}
     </span>
   )}
