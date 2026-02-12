@@ -1,7 +1,7 @@
 ---
 title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
 date: 2025-11-10 15:59:22
-tags: [Astro, React, TypeScript, Sanity, Cloudflare, Tailwind]
+tags: [Astro, React, TypeScript, Cloudflare, Tailwind]
 featured: true
 ---
 
