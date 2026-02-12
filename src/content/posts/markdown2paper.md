@@ -14,8 +14,8 @@ Below is a behind‑the‑scenes look at how I combined prompting, TypeScript ex
 ---
 1. The Problem Space
 Students and researchers constantly wrestle with two conflicting tasks:
-1. Write in Markdown – the lightweight, distraction‑free format we all love in Obsidian.  
-2. Submit a PDF – formatted to strict APA (or MLA) guidelines, complete with citations, and references.
+1. Write in Markdown, the lightweight, distraction-free format we all love in Obsidian.
+2. Submit a PDF, formatted to strict APA (or MLA) guidelines, complete with citations and references.
 Manually copying text into a word processor, tweaking headings, re-doing all the citations and adjusting line spacing is a pain point I’m over with. My goal was simple: press a button, get a PDF that looks like a school‑ready paper.
 ---
 I first looked at the friendly manual. The Obsidian docs are great, with a comprehensive in-depth page on plugins. I did as advised, created a separate vault for my dev work, pasted in some samples, and was off to try new things. Git clone the demo, and here I am.
@@ -74,7 +74,7 @@ Then I remember my Discrete Math notes, LaTeX rendering of equations, and math l
 So I prompted away; first in Plan mode:
 > "Can you come up with a plan to render LaTeX into PDF with this plugin. LaTeX in markdown will always be enclosed in single $ for in-line LaTeX and double $$ for single line LaTeX. $2+2$ should be rendered in place of the text $2+2$ and $$2+2$$ should create a new line before and after."
 
-After several attempts, it still did not work—it generated every line on the same spot.
+After several attempts, it still did not work. It generated every line on the same spot.
 
 After that, my time was up, and I had to go. Since I do not need any LaTeX for now, I have left that on the back burner until I have some time for it.
 
@@ -183,7 +183,7 @@ The plugin can be built with npm run build and dropped directly into an Obsidian
 
 ## Takeaways for me
 * Prompt‑first development is here, and it is not a shortcut; it’s a catalyst. It accelerates boilerplate creation, lets you focus on logic.
-* You still need to know what you are doing. The AI supplies the scaffolding; you provide the critical decisions—type safety, UX polish, and edge‑case handling.  
+* You still need to know what you are doing. The AI supplies the scaffolding. You provide the critical decisions: type safety, UX polish, and edge-case handling.  
 * Iterative feedback loops (run → observe → prompt → refine) compress the traditional development cycle dramatically.  
 	* Wiring a feedback loop into the model makes it 10x better.
 

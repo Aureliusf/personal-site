@@ -2,19 +2,20 @@
 title: Serve n8n publicly with nixOS
 date: 2025-06-25 15:59:22
 tags: [nixOS, Docker, nginx, fail2ban]
+featured: true
 ---
 
 # Serve n8n with nixOS
 
 *This project combined two goals: learning n8n for workflow automation and exploring nixOS for infrastructure management. The challenge was exposing n8n to external users without compromising my homelab's security model.*
 
-*I needed an automation platform intuitive enough for non-technical users—something my father (who runs a small business) could actually use without IT support, while keeping my home network completely isolated from the public internet.*
+*I needed an automation platform intuitive enough for non-technical users, something my father (who runs a small business) could actually use without IT support, while keeping my home network completely isolated from the public internet.*
 
 # n8n
 
 n8n is a "Fair-code workflow automation platform with native AI capabilities". [n8n-io/n8n](https://github.com/n8n-io/n8n)
 
-I needed an automation platform intuitive enough for non-technical users—something my father (who runs a small business) could actually use without IT support. Unlike my other homelab services that only I access via Tailscale, n8n needed to be available to external users who shouldn't have VPN access to my entire network.
+I needed an automation platform intuitive enough for non-technical users, something my father (who runs a small business) could actually use without IT support. Unlike my other homelab services that only I access via Tailscale, n8n needed to be available to external users who shouldn't have VPN access to my entire network.
 
 n8n can be run with docker and more recently with npx directly. However, Docker emerged as the better choice for this specific use case, despite nixOS's preference for native declarative services.
 
@@ -146,12 +147,12 @@ This means that I am unable to ssh into my n8n-server through base.org.es at all
 
 ### CVE-2026-21858 (Ni8mare)
 
-In January 2026, n8n disclosed [CVE-2026-21858](https://github.com/n8n-io/n8n/security/advisories/GHSA-v4pr-fm98-w9pg)—a critical vulnerability that could have allowed remote code execution. This incident validated the Docker-over-native architecture decision.
+In January 2026, n8n disclosed [CVE-2026-21858](https://github.com/n8n-io/n8n/security/advisories/GHSA-v4pr-fm98-w9pg), a critical vulnerability that could have allowed remote code execution. This incident validated the Docker-over-native architecture decision.
 
 **Container Isolation in Action:**
 Even if an attacker had exploited this vulnerability, the Docker container boundaries would have contained the breach. The attacker's access would have been limited to the container environment, not the underlying nixOS host system. This is exactly the kind of defense-in-depth that justifies Docker for integration-heavy services.
 
-The container was patched within hours of the security advisory—well before public disclosure—demonstrating the operational benefits of running containerized services with automated update workflows.
+The container was patched within hours of the security advisory, well before public disclosure, demonstrating the operational benefits of running containerized services with automated update workflows.
 
 ### Uptime & Reliability
 

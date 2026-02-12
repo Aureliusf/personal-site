@@ -6,7 +6,7 @@ featured: true
 ---
 # Context 
 
-**Context:** Early project (2021) — One of my first Python projects exploring REST APIs and data visualization. Simple architecture, but sparked my interest in working with external data sources.
+**Context:** Early project (2021). One of my first Python projects exploring REST APIs and data visualization. Simple architecture, but sparked my interest in working with external data sources.
 
 # Spotify-analyzer
 
