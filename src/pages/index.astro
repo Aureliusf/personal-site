@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostPreview from '../components/PostPreview.astro';
+import AboutContent from '../components/AboutContent.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const allPosts = (await getCollection('posts')).sort(
@@ -54,11 +55,10 @@ const uniqueTags = Object.entries(tagCounts)
         Developer & Computer Science Student
       </h1>
       <p class="text-[var(--text-secondary)] leading-relaxed mb-4">
-        Building projects ready for users with rock-solid, predictable, and declarative solutions. 
-        I focus on full-stack development, distributed systems, and creating maintainable codebases.
+        Shipping production systems with 99.99% uptime. I bridge TypeScript/React applications with NixOS/Docker infrastructure to build reliable, maintainable platforms.
       </p>
       <p class="text-[var(--text-muted)] text-sm">
-      Currently exploring self-hosting, web technologies, system design, AI applications and AI agentic workflows.
+      Open to internship opportunities in engineering and infrastructure roles.
       </p>
     </div>
   </section>
@@ -111,15 +111,7 @@ const uniqueTags = Object.entries(tagCounts)
     </div>
 
     <aside class="lg:col-span-4 space-y-8">
-      <section class="content-block card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          About
-        </h3>
-        <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
-          Computer Science student with hands-on web development experience. 
-          I enjoy working on small projects, tweaking environments, and learning new technologies.
-        </p>
-      </section>
+      <AboutContent compact={true} />
 
       <section class="content-block card-hover">
         <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
