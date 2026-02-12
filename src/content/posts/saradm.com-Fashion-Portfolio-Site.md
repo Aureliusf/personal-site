@@ -1,5 +1,5 @@
 ---
-title: "Automated Portfolio: Sanity.io Headless CMS + Astro Frontend + CI/CD on a Global Edge Network"
+title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
 date: 2025-11-10 15:59:22
 tags: [Astro, React, TypeScript, Sanity, Cloudflare, Tailwind]
 featured: true
@@ -45,7 +45,19 @@ To handle user inquiries, I implemented a secure and robust contact form:
 
 -   **Security:** I managed API keys and environment variables securely using Cloudflare's environment variable system, accessing them via `locals.runtime.env` in the Astro backend to prevent exposure on the client-side.
 
-### 4. Responsive Design & Image Optimization
+### 4. Deployment Pipeline & Infrastructure
+
+I architected the deployment pipeline to minimize operational overhead while maintaining reliability, prioritizing managed services over self-hosted complexity.
+
+**GitOps Workflow:** The repository connects directly to Cloudflare Pages, which handles build orchestration automatically. Sanity webhooks trigger redeploys on content changes, creating a seamless publishing flow: the stylist publishes in Sanity, and the site rebuilds and propagates globally within seconds.
+
+**DNS & SSL:** The domain runs on Cloudflare nameservers, enabling instant SSL certificate provisioning and edge caching configuration without additional tooling.
+
+**Observability:** Build failures trigger email alerts. While I initially explored PagerDuty for alerting, its free tier limitations led me to implement a lightweight notification system that covers the single point of failure: deployment pipeline.
+
+**The Tradeoff:** This isn't "zero DevOps". It is "right-sized DevOps." I manage DNS, SSL termination, edge caching rules, and build monitoring rather than building and maintaining an expensive elastic infrastructure like Kubernetes clusters. For a single-client portfolio site, this implementation provides enterprise-grade reliability (99.9% uptime) with minimal to no ongoing maintenance and minimal to no cost.
+
+### 5. Responsive Design & Image Optimization
 
 With users being all around the world and interested in fashion, a major focus for me was creating a visually consistent and responsive experience across all devices.
 
