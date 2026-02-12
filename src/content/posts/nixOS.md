@@ -4,6 +4,7 @@ date: 2025-06-25 15:59:22
 tags: [nixOS, Docker, nginx, fail2ban]
 featured: true
 metrics: "99.99% uptime · Zero security incidents"
+github: "https://github.com/Aureliusf/nixOS-n8n"
 ---
 
 # Serve n8n with nixOS

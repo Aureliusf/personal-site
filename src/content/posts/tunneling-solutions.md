@@ -3,7 +3,8 @@ title: "Serving Local Services: From Tailscale to Cloudflare Zero Trust"
 date: 2026-02-11 20:00:00
 tags: [HomeLab, Tailscale, "Cloudflare-Tunnel", "Zero-Trust"]
 featured: true
-metrics: "My personal guide on how to serve local services"
+metrics: ""
+github: ""
 ---
 
 # Serving Local Services: From Tailscale to Cloudflare Zero Trust

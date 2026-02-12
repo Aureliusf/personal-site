@@ -522,6 +522,19 @@
     margin-bottom: 0.5rem;
   }
 
+  .project-github {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .project-github svg {
+    fill: currentColor;
+  }
+
   /* Footer links */
   .footer-link {
     font-size: 0.875rem;

@@ -3,7 +3,8 @@ title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
 date: 2025-11-10 15:59:22
 tags: [Astro, React, TypeScript, Cloudflare, Tailwind]
 featured: true
-metrics: "98 Lighthouse score · 1.1k monthly visitors · 99.9% uptime"
+metrics: "99.9% uptime · 98 Lighthouse score · 1.1k monthly visitors"
+github: "https://github.com/Aureliusf/astro-saradm"
 ---
 
 This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS with the flexibility of Astro as a Frontend to deliver a great user experience for the visitor, the stylist making the content, and for myself maintaining the site. I deployed the site on Cloudflare Pages, utilizing serverless functions for the contact form which I built in TypeScript and integrated with Resend's RESTful API.
