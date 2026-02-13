@@ -22,8 +22,7 @@ const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
     slug: post.slug,
     title: post.data.title,
     meta: meta,
-    desc: tags.length > 0 ? tags[0] : 'View project details →',
-    metrics: post.data.metrics,
+    highlight: post.data.highlight,
     github: post.data.github
   };
 });
@@ -76,10 +75,9 @@ const uniqueTags = Object.entries(tagCounts)
                     {item.title}
                   </div>
                   <div class="project-meta">{item.meta}</div>
-                  {item.metrics && (
-                    <div class="project-metrics">{item.metrics}</div>
+                  {item.highlight && (
+                    <div class="project-metrics">{item.highlight}</div>
                   )}
-                  <div class="project-desc">{item.desc}</div>
                 </a>
                 {item.github && (
                   <a href={item.github} target="_blank" rel="noopener noreferrer" class="project-github hover:text-[var(--accent)] transition-colors mt-2 inline-flex items-center">

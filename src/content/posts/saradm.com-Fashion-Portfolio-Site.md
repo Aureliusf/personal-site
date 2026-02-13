@@ -1,9 +1,9 @@
 ---
 title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
 date: 2025-11-10 15:59:22
-tags: [Astro, React, TypeScript, Cloudflare, Tailwind]
+tags: ["Astro", "React", "TypeScript", "Cloudflare", "Tailwind"]
 featured: true
-metrics: "99.9% uptime · 98 Lighthouse score · 1.1k monthly visitors"
+highlight: "99.9% uptime · 98 Lighthouse score · 1.1k monthly visitors"
 github: "https://github.com/Aureliusf/astro-saradm"
 ---
 
