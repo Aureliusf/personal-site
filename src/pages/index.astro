@@ -47,17 +47,14 @@ const uniqueTags = Object.entries(tagCounts)
   .map(([tag]) => tag);
 ---
 
-<BaseLayout title="Aurelio Florez">
+<BaseLayout title="Aurelio Florez - Developer & Computer Science Student">
   <section class="mb-12 pb-8 border-b border-[var(--border)]">
     <div class="max-w-3xl">
       <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">
-        Developer & Computer Science Student
+        Aurelio Florez | Developer & Computer Science Student
       </h1>
-      <p class="text-[var(--text-secondary)] leading-relaxed mb-4">
-        Shipping production systems with 99.99% uptime. I bridge TypeScript/React applications with NixOS/Docker infrastructure to build reliable, maintainable platforms.
-      </p>
       <p class="text-[var(--text-muted)] text-sm">
-      Open to internship opportunities in engineering and infrastructure roles.
+      <AboutContent compact={true} />
       </p>
     </div>
   </section>
@@ -109,11 +106,9 @@ const uniqueTags = Object.entries(tagCounts)
     </div>
 
     <aside class="lg:col-span-4 space-y-8">
-      <AboutContent compact={true} />
-
       <section class="content-block card-hover">
         <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Tech Stack
+          Technologies
         </h3>
         <div class="flex flex-wrap gap-2">
           {uniqueTags.map((skill) => (
