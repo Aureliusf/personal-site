@@ -11,7 +11,7 @@ github: "https://github.com/Aureliusf/prompt-chess"
 
 There's a 30-90 second window in every AI coding session where your cursor blinks and your brain checks Twitter. Most people fill that gap with doomscrolling. I realized something contrarian: that dead space is the point.
 
-Chess is the perfect antidote to AI slop—finite, deterministic, and entirely your own fault when you lose. So I built a chess tui that appears automatically when OpenCode is thinking, and disappears when it's done. No browser tabs. No mouse. Just terminal, keyboard, vim motions, and the sweet distraction of blundering your queen while waiting for a refactor.
+Chess is the perfect antidote to AI slop-finite, deterministic, and entirely your own fault when you lose. So I built a chess tui that appears automatically when OpenCode is thinking, and disappears when it's done. No browser tabs. No mouse. Just terminal, keyboard, vim motions, and the sweet distraction of blundering your queen while waiting for a refactor.
 
 ---
 
