@@ -1,8 +1,8 @@
 ---
-title: Prompt-chess | Tmux Overlay for Opencode
+title: Prompt-chess - Tmux Overlay for Opencode
 date: 2026-02-20 15:59:22
 tags: ["TypeScript", "React", "AI-Agents"]
-featured: false
+featured: true
 highlight: "Event-driven chess overlay · Terminal-native"
 github: "https://github.com/Aureliusf/prompt-chess"
 ---
@@ -184,8 +184,8 @@ Sometimes "good enough" is the goal. And shipping is better than perfect.
 - **~600 lines**: Total JavaScript (not counting dependencies)
 - **3 sessions**: From idea to working prototype
 - **2 weeks**: From prototype to "I actually use this daily"
-
 - **1**: Number of people who find this useful (me)
+
 ## What's Next?
 
 Honestly? Probably nothing. Prompt Chess does what I need it to do. I'll fix bugs if they come up, and I might add PGN export so I can analyze my blitz games later. But the core tool is *done.*

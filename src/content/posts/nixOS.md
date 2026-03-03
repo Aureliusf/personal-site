@@ -2,7 +2,7 @@
 title: Serve n8n publicly with nixOS
 date: 2025-06-25 15:59:22
 tags: ["nix", "Docker", "nginx", "fail2ban"]
-featured: true
+featured: false
 highlight: "99.99% uptime · Zero security incidents"
 github: "https://github.com/Aureliusf/nixOS-n8n"
 ---
