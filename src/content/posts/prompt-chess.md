@@ -7,7 +7,7 @@ highlight: "Event-driven chess overlay · Terminal-native"
 github: "https://github.com/Aureliusf/prompt-chess"
 ---
 
-# Prompt-chess | Productive time in between inference calls
+# Prompt-chess - Productive time in between inference calls
 
 There's a 30-90 second window in every AI coding session where your cursor blinks and your brain checks Twitter. Most people fill that gap with doomscrolling. I realized something contrarian: that dead space is the point.
 
