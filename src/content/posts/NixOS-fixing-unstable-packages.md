@@ -1,7 +1,7 @@
 ---
 title: "Fixing Unstable Packages in Nix"
 date: 2026-02-13 12:00:00
-tags: ["Infrastructure as Code", "nix", "flakes", "nixos"]
+tags: ["Infrastructure as Code", "nix", "flakes", "nixOS"]
 featured: true
 highlight: "Infrastructure as Code · Reproducibility · Fixed Dependency Mismatches"
 ---
@@ -33,7 +33,7 @@ In your `flake.nix`, add the upstream repository as an input:
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-unstable";
     
     # Import opencode directly from GitHub
     opencode.url = "github:anomalyco/opencode";
@@ -164,14 +164,14 @@ git checkout HEAD~1 -- flake.lock
 Then update and rebuild:
 ```bash
 nix flake update
-sudo darwin-rebuild switch --flake ~/dotfiles  # or nixos-rebuild
+sudo darwin-rebuild switch --flake ~/dotfiles  # or nixOS-rebuild
 ```
 
 ---
 
 ## Solution 3: Overlay the Build Dependency 
 
-On another NixOS system, I solved this differently: keep opencode on latest/dev but upgrade bun through an overlay.
+On another nixOS system, I solved this differently: keep opencode on latest/dev but upgrade bun through an overlay.
 
 ### The Overlay Approach
 
@@ -192,7 +192,7 @@ On another NixOS system, I solved this differently: keep opencode on latest/dev 
 }
 ```
 
-**NixOS (x86_64):**
+**nixOS (x86_64):**
 ```nix
 {
   nixpkgs.overlays = [
@@ -262,7 +262,7 @@ Then keep opencode on the dev branch:
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:lnl7/nix-darwin/master";
     opencode.url = "github:anomalyco/opencode?ref=v1.1.57";
   };
@@ -289,18 +289,18 @@ Then keep opencode on the dev branch:
 }
 ```
 
-**NixOS:**
+**nixOS:**
 
 `flake.nix:`
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-unstable";
     opencode.url = "github:anomalyco/opencode?ref=v1.1.57";
   };
 
   outputs = inputs@{ nixpkgs, opencode, ... }: {
-    nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
+    nixOSConfigurations.desktop = nixpkgs.lib.nixOSSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [ ./configuration.nix ];
@@ -333,9 +333,9 @@ nix flake update
 sudo darwin-rebuild switch --flake ~/dotfiles
 ```
 
-**NixOS:**
+**nixOS:**
 ```bash
-sudo nixos-rebuild switch --flake ~/dotfiles
+sudo nixOS-rebuild switch --flake ~/dotfiles
 ```
 
 ---
