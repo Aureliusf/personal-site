@@ -27,7 +27,7 @@ const slug = post.slug;
       {tags.map((tag: string, i: number) => (
         <a
           href={`/tags/${tag}`}
-          class="hover:text-[var(--accent)] link-underline"
+          class="text-accent-pink hover:opacity-80 link-underline"
         >
           #{tag}{i < tags.length - 1 ? ', ' : ''}
         </a>

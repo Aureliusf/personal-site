@@ -7,11 +7,11 @@ const { compact = false } = Astro.props;
 
 const bioText = `I ship reliable software.
 
-My current production system serves 1.1k+ monthly users with 99.9% uptime and a 98 Lighthouse score.
+My current production system serves <span class="text-accent-amber font-bold">1.1k+ monthly users</span> with <span class="text-accent-amber font-bold">99.9% uptime</span> and a <span class="text-accent-amber font-bold">98 Lighthouse score</span>.
 
 I focus on systems that stay up: proper CI/CD, observability, and error handling. I'm looking for a team that needs someone to own features end-to-end, everywhere from frontend to infrastructure.
 
-<a href="mailto:mail@aurelioflorez.com" class="text-[var(--accent)] hover:underline">Let's talk</a> if you need someone who ships.`;
+<a href="mailto:mail@aurelioflorez.com" class="text-accent-pink hover:opacity-80 underline">Let's talk</a> if you need someone who ships.`;
 ---
 
 {compact ? (
@@ -42,7 +42,7 @@ I focus on systems that stay up: proper CI/CD, observability, and error handling
           </p>
           <a 
             href="mailto:mail@aurelioflorez.com" 
-            class="inline-block px-4 py-2 border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--bg-primary)] transition-colors"
+            class="inline-block px-4 py-2 border border-[var(--accent-pink)] text-[var(--accent-pink)] hover:bg-[var(--accent-pink)] hover:text-[var(--bg-primary)] transition-colors"
           >
             Say Hello
           </a>
@@ -54,7 +54,7 @@ I focus on systems that stay up: proper CI/CD, observability, and error handling
           <div class="space-y-5">
             <a 
               href="https://github.com/aureliusf" 
-              class="flex items-center gap-3 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors group"
+              class="flex items-center gap-3 text-accent-emerald link-emerald group"
               target="_blank" 
               rel="noopener noreferrer"
             >
@@ -66,7 +66,7 @@ I focus on systems that stay up: proper CI/CD, observability, and error handling
 
             <a 
               href="https://www.linkedin.com/in/aurelioflorez/" 
-              class="flex items-center gap-3 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors group"
+              class="flex items-center gap-3 text-accent-emerald link-emerald group"
               target="_blank" 
               rel="noopener noreferrer"
             >
@@ -78,7 +78,7 @@ I focus on systems that stay up: proper CI/CD, observability, and error handling
 
             <a 
               href="https://x.com/aureliusflorez" 
-              class="flex items-center gap-3 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors group"
+              class="flex items-center gap-3 text-accent-emerald link-emerald group"
               target="_blank" 
               rel="noopener noreferrer"
             >
