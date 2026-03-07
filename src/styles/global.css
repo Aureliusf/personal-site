@@ -23,6 +23,11 @@
   --success: #98971a;
   --warning: #d79921;
   --error: #cc241d;
+  
+  /* Tri-color semantic palette */
+  --accent-pink: #d3869b;
+  --accent-emerald: #98971a;
+  --accent-amber: #d79921;
 }
 
 [data-theme="dark"] {
@@ -45,6 +50,11 @@
   --success: #b8bb26;
   --warning: #fabd2f;
   --error: #fb4934;
+  
+  /* Tri-color semantic palette (dark mode) */
+  --accent-pink: #d3869b;
+  --accent-emerald: #b8bb26;
+  --accent-amber: #fabd2f;
 }
 
 @layer base {
@@ -957,4 +967,24 @@
     opacity: 0.3;
     transition: 0s;
   }
+}
+
+/* Radar Sweep Animation */
+@keyframes radar {
+  0% { content: "◴"; color: var(--accent-pink); }
+  25% { content: "◵"; color: var(--accent-emerald); }
+  50% { content: "◶"; color: var(--accent-amber); }
+  75% { content: "◷"; color: var(--accent-emerald); }
+}
+
+.radar-name {
+  position: relative;
+}
+
+.radar-name::before {
+  content: "◴";
+  animation: radar 2s steps(4) infinite;
+  margin-right: 0.5rem;
+  font-family: monospace;
+  display: inline-block;
 }
