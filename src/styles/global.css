@@ -969,12 +969,20 @@
   }
 }
 
-/* Radar Sweep Animation */
-@keyframes radar {
-  0% { content: "◴"; color: var(--accent-pink); }
-  25% { content: "◵"; color: var(--accent-emerald); }
-  50% { content: "◶"; color: var(--accent-amber); }
-  75% { content: "◷"; color: var(--accent-emerald); }
+/* Terminal Cursor Animation */
+@keyframes cursor-glow {
+  0% {
+    color: var(--accent-pink);
+    text-shadow: 0 0 5px var(--accent-pink);
+  }
+  50% {
+    color: var(--accent-amber);
+    text-shadow: 0 0 5px var(--accent-amber);
+  }
+  100% {
+    color: var(--accent-pink);
+    text-shadow: 0 0 5px var(--accent-pink);
+  }
 }
 
 .radar-name {
@@ -982,9 +990,11 @@
 }
 
 .radar-name::before {
-  content: "◴";
-  animation: radar 2s steps(4) infinite;
+  content: "_";
+  animation: cursor-glow 2s ease-in-out infinite;
   margin-right: 0.5rem;
   font-family: monospace;
   display: inline-block;
+  text-shadow: 0 0 5px var(--accent-pink);
+  vertical-align: 0.1em;
 }
