@@ -11,6 +11,9 @@ github: "https://github.com/Aureliusf/resumequiver"
 
 Resume tools usually force a choice: fight Word formatting or pay $20/month for generic AI buzzwords. I built something different: a YAML-based resume builder with bullet selection management, AI copywriting, and a dark theme called "Direct Flash." Four cutting-edge AI agents helped build it: Paquita (Claw), Claude 4.6 (released Feb 2026), Kimi K2.5, and GPT 5.4 (released March 2026).
 
+![ResumeQuiver Interface](./full-page-.jpeg)
+*The three-panel layout: Bullet Library (left), Preview (center), YAML Editor (right)*
+
 ---
 
 ## The Problem
