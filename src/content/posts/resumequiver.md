@@ -274,7 +274,8 @@ This project showcase effective multi-agent collaboration:
 | **Claude 4.6** | Architecture, edge-case analysis | PLAN.md, system design, Sentry planning |
 | **Kimi K2.5** | Implementation breadth, consistency | Bulk feature development |
 | **GPT 5.4** | Targeted polish, tight feedback loops | Specific features, bug fixes|
-|
+
+
 The key insight: match the agent to the task. Don't ask Claude to tweak CSS. Don't ask Kimi to design architecture. Each agent has comparative advantages. Use them appropriately.
 
 ---
