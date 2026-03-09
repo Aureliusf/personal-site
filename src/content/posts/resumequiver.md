@@ -343,6 +343,6 @@ This approach provides production monitoring without tracking user data.
 
 The resume builder is complete and deployed. It serves its purpose: YAML editing, bullet library with selection, AI assistance, and professional PDF export. It won't write your resume for you. You still need accomplishments to describe. But it removes the friction from the process.
 
-
-**Try it**: [github.com/Aureliusf/ResumeQuiver](https://github.com/Aureliusf/ResumeQuiver)
+If you want to free yourself up from word documents and formatting hell, you can give it a try at [resume-quiver][https://resume-quiver.vercel.app/]
+And if you like to modify the template or run it yourself, check-out: [github.com/Aureliusf/ResumeQuiver](https://github.com/Aureliusf/ResumeQuiver)
 
