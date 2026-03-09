@@ -3,8 +3,10 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "prebuild": "cp -r static/* public/ 2>/dev/null || true",
     "build": "astro build",
+    "predev": "cp -r static/* public/ 2>/dev/null || true",
+    "dev": "astro dev",
     "preview": "astro preview",
     "astro": "astro"
   },
