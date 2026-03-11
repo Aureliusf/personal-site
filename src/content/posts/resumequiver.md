@@ -1,5 +1,5 @@
 ---
-title: ResumeQuiver - Multi-Agent Resume Builder
+title: ResumeQuiver - Serverless AI-Assisted YAML Resume Builder
 date: 2026-03-07 15:59:22
 tags: ["TypeScript", "React", "AI-Agents", "Sentry"]
 featured: true
