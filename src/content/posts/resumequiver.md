@@ -7,7 +7,7 @@ highlight: "Vercel · Sentry Observability · BYOK AI"
 github: "https://github.com/Aureliusf/resumequiver"
 ---
 
-# Building a Multi-Agent Resume Builder: A Case Study in AI-Assisted Development
+# Building a Privacy-First AI-Assisted Resume Builder: A Case Study in AI-Assisted Development
 
 Resume tools usually force a choice: fight Word formatting or pay $20/month for generic AI buzzwords. I built something different: a YAML-based resume builder with bullet selection management, AI copywriting, and a dark theme called "Direct Flash." Four cutting-edge AI agents helped build it: Paquita (Claw), Claude 4.6 (released Feb 2026), Kimi K2.5, and GPT 5.4 (released March 2026).
 
