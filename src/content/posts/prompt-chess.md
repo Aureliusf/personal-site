@@ -1,5 +1,6 @@
 ---
 title: Prompt-chess - Tmux Overlay for Opencode
+description: A terminal-native chess game that appears automatically when OpenCode is thinking. Built with TypeScript and React for productive breaks during AI coding sessions.
 date: 2026-02-20 15:59:22
 tags: ["TypeScript", "React", "AI-Agents"]
 featured: true

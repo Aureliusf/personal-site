@@ -1,5 +1,6 @@
 ---
 title: "Serving Local Services: From Tailscale to Cloudflare Zero Trust"
+description: A comprehensive guide to tunneling solutions for self-hosting. Covers Tailscale, SSH reverse tunnels, ephemeral tunnels, and Cloudflare Zero Trust for different use cases.
 date: 2026-02-11 20:00:00
 tags: ["HomeLab", "Tailscale", "Cloudflare-Tunnel", "Zero-Trust"]
 featured: true

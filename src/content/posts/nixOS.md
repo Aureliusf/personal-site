@@ -1,5 +1,6 @@
 ---
 title: Serve n8n publicly with nixOS
+description: How to securely expose n8n workflow automation to external users using nixOS, Docker, nginx, and fail2ban while keeping your homelab isolated.
 date: 2025-06-25 15:59:22
 tags: ["nix", "Docker", "nginx", "fail2ban"]
 featured: false

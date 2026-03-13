@@ -1,5 +1,6 @@
 ---
 title: ResumeQuiver - Serverless AI-Assisted YAML Resume Builder
+description: A privacy-first YAML-based resume builder with bullet selection management, AI copywriting, and dark theme. Built with TypeScript, React, and Vercel.
 date: 2026-03-07 15:59:22
 tags: ["TypeScript", "React", "AI-Agents", "Sentry"]
 featured: true

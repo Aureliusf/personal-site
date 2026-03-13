@@ -1,5 +1,6 @@
 ---
 title: "Fixing Unstable Packages in Nix"
+description: Learn how to handle outdated packages in nixpkgs by importing directly from source using Nix Flakes and managing dependency mismatches.
 date: 2026-02-13 12:00:00
 tags: ["Infrastructure as Code", "nix", "flakes", "nixOS"]
 featured: true

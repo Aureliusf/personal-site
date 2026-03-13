@@ -1,5 +1,6 @@
 ---
 title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
+description: A high-performing portfolio site for a fashion stylist built with Astro, Sanity CMS, and Cloudflare Pages. Achieved 98 Lighthouse score and 99.9% uptime.
 date: 2025-11-10 15:59:22
 tags: ["Astro", "React", "TypeScript", "Cloudflare", "Tailwind"]
 featured: true

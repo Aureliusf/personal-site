@@ -7,7 +7,7 @@ type Props = CollectionEntry<'posts'>['data'] & {
   github?: string;
 };
 
-const { title, date, tags, github } = Astro.props;
+const { title, description, date, tags, github } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -16,7 +16,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={title} description={title}>
+<BaseLayout title={title} description={description}>
   <article class="max-w-3xl mx-auto">
     <!-- Post Header -->
     <header class="mb-8 pb-6 border-b border-[var(--border)]">

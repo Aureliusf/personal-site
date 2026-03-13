@@ -1,5 +1,6 @@
 ---
 title: Markdown2Paper - Ship in 3 hours with Opencode
+description: An Obsidian plugin that converts Markdown notes to formatted PDFs. Built in 3 hours using TypeScript, jsPDF, and AI-assisted development.
 date: 2025-12-27 15:59:22
 tags: ["TypeScript", "Obsidian", "jspdf", "AI-Agents"]
 featured: false

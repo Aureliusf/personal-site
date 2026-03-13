@@ -16,6 +16,7 @@
     "@astrojs/tailwind": "^6.0.2",
     "@fontsource/dm-serif-display": "^5.2.8",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "astro": "^5.16.15",
     "astro-icon": "^1.1.5",
     "astro-mermaid": "^1.3.1",

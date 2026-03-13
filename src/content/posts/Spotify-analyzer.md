@@ -1,5 +1,6 @@
 ---
 title: Spotify-analyzer
+description: Early Python project from 2021 exploring REST APIs and data visualization. Analyzes Spotify album statistics using the Web API and Pandas.
 date: 2021-03-26 20:43:42
 tags: [Python, Pandas, "REST API", "Data-Viz"]
 metrics: ""
