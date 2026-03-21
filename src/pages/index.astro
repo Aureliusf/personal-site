@@ -61,9 +61,50 @@ const uniqueTags = Object.entries(tagCounts)
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
     <div class="lg:col-span-8">
+      <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="section-header">Projects</h2>
+          <a href="/projects" class="text-sm text-accent-pink hover:opacity-80 link-underline">
+            View all →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="project-item card-hover hover-glow overflow-hidden">
+            <a href="/posts/saradmcom-fashion-portfolio-site" class="block">
+              <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
+                <img 
+                  src="/images/saradm-preview.png" 
+                  alt="saradm.com preview"
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div class="project-title link-underline">Portfolio Site for Fashion Stylist</div>
+              <div class="project-meta">Astro + Sanity CMS on Cloudflare</div>
+              <div class="project-metrics">99.9% uptime · 100 Lighthouse</div>
+            </a>
+          </div>
+          <div class="project-item card-hover hover-glow overflow-hidden">
+            <a href="/posts/resumequiver" class="block">
+              <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
+                <img 
+                  src="/images/resumequiver-preview.png" 
+                  alt="ResumeQuiver preview"
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div class="project-title link-underline">ResumeQuiver</div>
+              <div class="project-meta">TypeScript + React + Vercel</div>
+              <div class="project-metrics">YAML-based · BYOK AI</div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {featuredPostData.length > 0 && (
         <section class="mb-12">
-          <h2 class="section-header mb-6">Featured Projects</h2>
+          <h2 class="section-header mb-6">Featured Posts</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {featuredPostData.map((item) => (
               <div class="project-item card-hover hover-glow relative">

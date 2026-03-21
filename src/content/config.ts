@@ -11,6 +11,7 @@ const posts = defineCollection({
     featured: z.boolean().optional().default(false),
     highlight: z.string().optional(),
     github: z.string().optional(),
+    liveUrl: z.string().optional(),
   }),
 });
 

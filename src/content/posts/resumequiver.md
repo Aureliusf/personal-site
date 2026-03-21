@@ -6,6 +6,7 @@ tags: ["TypeScript", "React", "AI-Agents", "Sentry"]
 featured: true
 highlight: "Vercel · Sentry Observability · BYOK AI"
 github: "https://github.com/Aureliusf/resumequiver"
+liveUrl: "https://resume-quiver.vercel.app"
 ---
 
 # Building a Privacy-First AI-Assisted Resume Builder: A Case Study in AI-Assisted Development

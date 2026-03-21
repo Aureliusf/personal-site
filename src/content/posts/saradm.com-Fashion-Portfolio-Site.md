@@ -1,11 +1,12 @@
 ---
 title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
-description: A high-performing portfolio site for a fashion stylist built with Astro, Sanity CMS, and Cloudflare Pages. Achieved 98 Lighthouse score and 99.9% uptime.
+description: A high-performing portfolio site for a fashion stylist built with Astro, Sanity CMS, and Cloudflare Pages. Achieved 100 Lighthouse score and 99.9% uptime.
 date: 2025-11-10 15:59:22
 tags: ["Astro", "React", "TypeScript", "Cloudflare", "Tailwind"]
 featured: true
-highlight: "99.9% uptime · 98 Lighthouse score · 1.1k monthly visitors"
+highlight: "99.9% uptime · 100 Lighthouse score · 1.1k monthly visitors"
 github: "https://github.com/Aureliusf/astro-saradm"
+liveUrl: "https://saradm.com"
 ---
 
 This project is a real-life, high-performing site I built for a Fashion Stylist. For saradm.com, I leveraged the ease of use of Sanity.io headless CMS with the flexibility of Astro as a Frontend to deliver a great user experience for the visitor, the stylist making the content, and for myself maintaining the site. I deployed the site on Cloudflare Pages, utilizing serverless functions for the contact form which I built in TypeScript and integrated with Resend's RESTful API.
@@ -153,8 +154,8 @@ My development process was iterative, focusing on building features, fixing bugs
     ````
 
 ## Performance and Uptime
-The site achieved excellent Lighthouse scores: 98 Performance, 100 Accessibility, 100 Best Practices, and 92 SEO (deductions due to pending content from the client).
 
+The site achieved excellent Lighthouse scores: 100 Performance, 95 Accessibility, 100 Best Practices, and 83 SEO (deductions due to pending content from the client).
 ![Lighthouse Score](/images/saradm.com-lighthouse.png)
 
 Regarding analytics, we choose to work with cloudflare analytics and have seen 30 to 65 unique visitors a day, totalling 1.1k visitors a month with virtually 0 errors after the development phase.
