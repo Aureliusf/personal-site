@@ -29,23 +29,11 @@
 </header>
 
 <script>
-  const toggle = document.getElementById('theme-toggle');
-
-  if (toggle) {
-    const handleToggle = () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      
-      // Add spin animation to the button
-      toggle.classList.add('animate-spin');
-      setTimeout(() => {
-        toggle.classList.remove('animate-spin');
-      }, 500);
-    };
-
-    toggle.addEventListener('click', handleToggle);
-  }
+  document.getElementById('theme-toggle')?.addEventListener('click', function() {
+    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+    this.classList.add('animate-spin');
+    setTimeout(() => this.classList.remove('animate-spin'), 500);
+  });
 </script>

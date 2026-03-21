@@ -72,12 +72,18 @@ const uniqueTags = Object.entries(tagCounts)
           <div class="project-item card-hover hover-glow overflow-hidden">
             <a href="/posts/saradmcom-fashion-portfolio-site" class="block">
               <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
-                <img 
-                  src="/images/saradm-preview.png" 
-                  alt="saradm.com preview"
-                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  loading="lazy"
-                />
+                <picture>
+                  <source srcset="/images/webp/saradm-preview.webp" type="image/webp" />
+                  <img 
+                    src="/images/saradm-preview.png" 
+                    alt="saradm.com preview"
+                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    width="800"
+                    height="481"
+                  />
+                </picture>
               </div>
               <div class="project-title link-underline">Portfolio Site for Fashion Stylist</div>
               <div class="project-meta">Astro + Sanity CMS on Cloudflare</div>
@@ -87,12 +93,18 @@ const uniqueTags = Object.entries(tagCounts)
           <div class="project-item card-hover hover-glow overflow-hidden">
             <a href="/posts/resumequiver" class="block">
               <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
-                <img 
-                  src="/images/resumequiver-preview.png" 
-                  alt="ResumeQuiver preview"
-                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  loading="lazy"
-                />
+                <picture>
+                  <source srcset="/images/webp/resumequiver.webp" type="image/webp" />
+                  <img 
+                    src="/images/resumequiver-preview.png" 
+                    alt="ResumeQuiver preview"
+                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    width="800"
+                    height="481"
+                  />
+                </picture>
               </div>
               <div class="project-title link-underline">ResumeQuiver</div>
               <div class="project-meta">TypeScript + React + Vercel</div>
