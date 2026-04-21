@@ -19,7 +19,7 @@ const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
   const techStack = tags.slice(0, 3).join(' + ');
   const meta = `${year} ${techStack ? '· ' + techStack : ''}`;
   return {
-    slug: post.slug,
+    slug: post.id,
     title: post.data.title,
     meta: meta,
     highlight: post.data.highlight,
@@ -27,7 +27,7 @@ const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
   };
 });
 
-const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) => p.slug));
+const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) => p.id));
 const recentPosts = allPosts
   .slice(0, 10);
 
