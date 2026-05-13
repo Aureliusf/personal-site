@@ -16,7 +16,7 @@
     "@fontsource/dm-serif-display": "^5.2.8",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
-    "astro": "^6.1.6",
+    "astro": "^6.3.1",
     "astro-icon": "^1.1.5",
     "astro-mermaid": "^2.0.1",
     "clsx": "^2.1.1",
