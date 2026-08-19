@@ -24,13 +24,6 @@ export default defineConfig({
   vite: {
     build: {
       cssCodeSplit: true,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'vendor': [],
-          },
-        },
-      },
     },
   },
 });
