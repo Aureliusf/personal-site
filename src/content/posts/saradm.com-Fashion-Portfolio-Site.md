@@ -1,10 +1,10 @@
 ---
 title: "Portfolio Site for Fashion Stylist: Astro + Sanity CMS on Cloudflare"
-description: A high-performing portfolio site for a fashion stylist built with Astro, Sanity CMS, and Cloudflare Pages. Achieved 100 Lighthouse score and 99.9% uptime.
+description: A fashion portfolio built with Astro, Sanity, and Cloudflare Pages that serves about 1,100 monthly visitors with 99.9% measured uptime.
 date: 2025-11-10 15:59:22
 tags: ["Astro", "React", "TypeScript", "Cloudflare", "Tailwind"]
 featured: true
-highlight: "99.9% uptime · 100 Lighthouse score · 1.1k monthly visitors"
+highlight: "99.9% measured uptime · Lighthouse performance 100 · 1.1k monthly visitors"
 github: "https://github.com/Aureliusf/astro-saradm"
 liveUrl: "https://saradm.com"
 ---

@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { profile } from '../data/agent-profile';
 
 function getExcerpt(content, maxLength = 160) {
   // Remove frontmatter
@@ -22,7 +23,7 @@ export async function GET(context) {
   const posts = await getCollection('posts');
   return rss({
     title: 'Aurelio Florez',
-    description: 'Software Engineer focused on reliable systems - from frontend to infrastructure.',
+    description: profile.summary,
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
