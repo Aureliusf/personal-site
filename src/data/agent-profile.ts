@@ -141,7 +141,7 @@ export const profile = {
   headline:
     'AI and operations engineer who turns loosely defined business problems into production systems.',
   summary:
-    'Aurelio Florez builds AI agents, ERP integrations, workflow automation, backend services, and the infrastructure that runs them. He owns projects from architecture and security through deployment, evaluation, and handoff to nontechnical users.',
+    'Aurelio Florez is most interested in AI agents that do bounded, reversible work, the evaluation and infrastructure around them, and workflow automation that removes repetitive manual steps. He prefers projects where he can own the path from an unclear problem through deployment and handoff.',
   email: 'mail@aurelioflorez.com',
   location: 'Miami, Florida',
   languages: ['English', 'Spanish'],
