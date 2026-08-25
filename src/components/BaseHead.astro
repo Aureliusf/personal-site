@@ -4,6 +4,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
+import { absoluteUrl, profile } from '../data/agent-profile';
 
 interface Props {
   title: string;
@@ -11,6 +12,19 @@ interface Props {
 }
 
 const { title, description = 'Software Engineer focused on reliable systems - from frontend to infrastructure.' } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, profile.siteUrl).toString();
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: profile.siteUrl,
+  email: `mailto:${profile.email}`,
+  jobTitle: 'Software Engineer',
+  description: profile.summary,
+  sameAs: [profile.links.github, profile.links.linkedin, profile.links.x],
+  knowsAbout: profile.focus,
+  mainEntityOfPage: absoluteUrl('/llms.txt'),
+};
 ---
 
 <head>
@@ -21,6 +35,10 @@ const { title, description = 'Software Engineer focused on reliable systems - fr
   <meta name="generator" content={Astro.generator} />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <link rel="alternate" type="text/plain" title="Agent-readable profile" href="/llms.txt" />
+  <link rel="alternate" type="application/json" title="Structured agent profile" href="/.well-known/agent-profile.json" />
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   
   <!-- Preload critical fonts -->
   <link rel="preload" href="/node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
