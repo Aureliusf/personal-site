@@ -8,6 +8,9 @@ export default defineConfig({
     mdx(),
     mermaid(),
   ],
+  redirects: {
+    '/posts/saradm-com-fashion-portfolio-site': '/posts/saradmcom-fashion-portfolio-site',
+  },
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',
