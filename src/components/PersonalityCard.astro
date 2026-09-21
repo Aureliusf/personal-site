@@ -69,7 +69,7 @@ const facts = [
 
       <div class="pc-bottom">
         <span class="pc-cross" aria-hidden="true">✕</span>
-        <p class="pc-hint">Hover to tilt</p>
+        <p class="pc-hint">Move to tilt</p>
         <span class="pc-cross" aria-hidden="true">✕</span>
       </div>
     </div>
@@ -388,8 +388,8 @@ const facts = [
 </style>
 
 <script>
-  // Pointer tilt — the card leans toward the pointer and settles back on
-  // leave. No holographic reveal, just tilt + a soft pointer light.
+  // Tilt — the card leans toward the pointer (desktop) or with the phone's
+  // orientation (mobile gyro). Settles back when the input stops.
   const cards = document.querySelectorAll<HTMLElement>('[data-personality-card]');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -397,7 +397,7 @@ const facts = [
     if (reduceMotion) return;
 
     const maxTilt = 7; // degrees
-    const lift = 6; // px — subtle scale/lift toward the pointer
+    const lift = 6; // px — subtle scale/lift while engaged
     let raf = 0;
     let tiltX = 0, tiltY = 0, targetX = 0, targetY = 0;
     let liftZ = 0, targetLift = 0;
@@ -425,26 +425,102 @@ const facts = [
       if (!raf) raf = requestAnimationFrame(frame);
     };
 
+    // Shared setter: nx/ny in [-1, 1] (tilt direction), engaged = input active.
+    const setTilt = (nx: number, ny: number, engaged: boolean) => {
+      targetX = ny * maxTilt;
+      targetY = nx * maxTilt;
+      targetLift = engaged ? lift : 0;
+      targetLight = engaged ? 1 : 0;
+      const mx = 50 + nx * 35;
+      const my = 50 - ny * 35;
+      card.style.setProperty('--mx', `${mx.toFixed(2)}%`);
+      card.style.setProperty('--my', `${my.toFixed(2)}%`);
+      start();
+    };
+
+    // --- Desktop: pointer tilt ---
     card.addEventListener('pointermove', (e: PointerEvent) => {
       if (e.pointerType === 'touch') return; // keep page scroll on touch
       const rect = card.getBoundingClientRect();
       const px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
       const py = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
-      targetX = (0.5 - py) * maxTilt;
-      targetY = (px - 0.5) * maxTilt;
-      targetLift = lift;
-      targetLight = 1;
-      card.style.setProperty('--mx', `${(px * 100).toFixed(2)}%`);
-      card.style.setProperty('--my', `${(py * 100).toFixed(2)}%`);
-      start();
+      setTilt(px - 0.5, 0.5 - py, true);
     });
 
-    card.addEventListener('pointerleave', () => {
-      targetX = 0;
-      targetY = 0;
-      targetLift = 0;
-      targetLight = 0;
-      start();
-    });
+    card.addEventListener('pointerleave', () => setTilt(0, 0, false));
+
+    // --- Mobile: device orientation (gyro) ---
+    const RANGE = 30; // degrees of phone tilt mapped to full card tilt
+    let gyroAttached = false;
+
+    const onOrientation = (e: DeviceOrientationEvent) => {
+      const beta = e.beta;
+      const gamma = e.gamma;
+      if (beta == null || gamma == null) return;
+
+      // Compensate for screen rotation (landscape swaps the axes).
+      const angle = (screen.orientation?.angle ?? 0) || 0;
+      let b = beta;
+      let g = gamma;
+      if (angle === 90) {
+        b = gamma;
+        g = -beta;
+      } else if (angle === -90 || angle === 270) {
+        b = -gamma;
+        g = beta;
+      } else if (angle === 180) {
+        b = -beta;
+        g = -gamma;
+      }
+
+      const clamp = (v: number) => Math.max(-RANGE, Math.min(RANGE, v));
+      // Top of phone tipping away (beta < 0) tilts the card top back,
+      // right tilt (gamma > 0) leans the card right — card follows the phone.
+      const nx = clamp(g) / RANGE;
+      const ny = clamp(-b) / RANGE;
+      // A roughly flat phone lets the card rest; tilting wakes it up.
+      const engaged = Math.max(Math.abs(b), Math.abs(g)) > 3;
+      setTilt(nx, ny, engaged);
+    };
+
+    const attachGyro = () => {
+      if (gyroAttached) return;
+      gyroAttached = true;
+      window.addEventListener('deviceorientation', onOrientation);
+    };
+
+    const supportsOrientation =
+      typeof window.DeviceOrientationEvent !== 'undefined' &&
+      'ondeviceorientation' in window;
+
+    if (supportsOrientation) {
+      // Attach right away — Safari simply delivers no events until
+      // permission is granted; every other platform fires freely.
+      attachGyro();
+
+      const DOE = window.DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<'granted' | 'denied'>;
+      };
+
+      if (typeof DOE.requestPermission === 'function') {
+        // iOS 13+: motion access must be requested from a user gesture —
+        // ask on the first touch of the card.
+        card.addEventListener(
+          'touchend',
+          () => {
+            DOE.requestPermission?.()
+              .then((state) => {
+                if (state !== 'granted') {
+                  window.removeEventListener('deviceorientation', onOrientation);
+                }
+              })
+              .catch(() => {
+                /* denied or unavailable — tilt stays pointer-only */
+              });
+          },
+          { once: true },
+        );
+      }
+    }
   });
 </script>
