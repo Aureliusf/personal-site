@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostPreview from '../components/PostPreview.astro';
 import AboutContent from '../components/AboutContent.astro';
+import PersonalityCard from '../components/PersonalityCard.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const allPosts = (await getCollection('posts')).sort(
@@ -49,10 +50,21 @@ const uniqueTags = Object.entries(tagCounts)
 
 <BaseLayout title="Aurelio Florez | AI and Operations Engineer">
   <section class="mb-12 pb-8 border-b border-[var(--border)]">
-    <div >
-      <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">
-        <span class="radar-name">Aurelio Florez</span>
-      </h1>
+    <div>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h1 class="text-2xl font-semibold text-[var(--text-primary)]">
+          <span class="radar-name">Aurelio Florez</span>
+        </h1>
+        <button data-card-trigger type="button" aria-haspopup="dialog" class="hero-card-chip">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="4.5" width="19" height="15" rx="1" />
+            <circle cx="8" cy="10.75" r="2.25" />
+            <path d="M4.75 16.5c.7-1.8 1.9-2.6 3.25-2.6s2.55.8 3.25 2.6" />
+            <path d="M14.5 9.5h4.75M14.5 12.5h4.75M14.5 15.5h2.75" />
+          </svg>
+          <span>Personality Card</span>
+        </button>
+      </div>
       <p class="text-[var(--text-muted)] text-sm">
       <AboutContent compact={true} />
       </p>
@@ -169,23 +181,203 @@ const uniqueTags = Object.entries(tagCounts)
           ))}
         </div>
       </section>
-
-      <section class="content-block card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Connect
-        </h3>
-        <div class="space-y-2 text-sm">
-          <a href="https://github.com/aureliusf" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            github.com/aureliusf
-          </a>
-          <a href="https://www.linkedin.com/in/aurelioflorez/" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            linkedin.com/in/aurelioflorez
-          </a>
-          <a href="/resume.pdf" class="block text-accent-pink hover:opacity-80 link-underline">
-            Download Resume
-          </a>
-        </div>
-      </section>
     </aside>
   </div>
+
+  <!-- Personality card pop-out modal -->
+  <div class="card-modal" data-card-modal role="dialog" aria-modal="true" aria-hidden="true" aria-label="Aurelio Florez — personality card">
+    <div class="card-modal-backdrop" data-card-backdrop></div>
+    <div class="card-modal-panel">
+      <PersonalityCard bare>
+        <button
+          slot="actions"
+          data-card-close
+          type="button"
+          aria-label="Close personality card"
+          class="card-close"
+        >✕</button>
+      </PersonalityCard>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  /* Sleek hero trigger chip */
+  .hero-card-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hero-card-chip:hover {
+    color: var(--accent-pink);
+    border-color: var(--accent-pink);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 12px rgba(236, 72, 153, 0.12);
+  }
+
+  .hero-card-chip:active {
+    transform: translateY(0);
+  }
+
+  /* Pop-out modal */
+  .card-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 2.5rem 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s;
+  }
+
+  .card-modal.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .card-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(9, 10, 12, 0.78);
+    backdrop-filter: blur(3px);
+  }
+
+  /* The "pop": scale + slight rotation with an overshooting bezier,
+     plus a focus blur for a fluid depth effect */
+  .card-modal-panel {
+    position: relative;
+    transform: scale(0.82) rotate(-6deg) translateY(20px);
+    filter: blur(6px);
+    transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  }
+
+  .card-modal.open .card-modal-panel {
+    transform: scale(1) rotate(0deg) translateY(0);
+    filter: blur(0);
+    animation: panelFloat 8s ease-in-out 0.9s infinite;
+  }
+
+  /* Gentle idle float while popped out — the card never sits still */
+  @keyframes panelFloat {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg) translateY(0);
+    }
+    50% {
+      transform: scale(1) rotate(0deg) translateY(-8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-modal-panel {
+      transform: none;
+      filter: none;
+      transition: none;
+    }
+
+    .card-modal.open .card-modal-panel {
+      animation: none;
+    }
+  }
+
+  /* Close ✕ — styled as one of the card's own registration crosses,
+     sitting in the title row of the card. */
+  .card-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1;
+    color: rgba(240, 243, 247, 0.45);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-close:hover {
+    color: var(--accent-pink);
+    text-shadow: 0 0 10px rgba(236, 72, 153, 0.45);
+    transform: rotate(90deg);
+  }
+
+  .card-close:focus-visible {
+    outline: 1px solid var(--accent-pink);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  const modal = document.querySelector('[data-card-modal]');
+  const trigger = document.querySelector('[data-card-trigger]');
+  const closeBtn = modal?.querySelector('[data-card-close]');
+  const backdrop = modal?.querySelector('[data-card-backdrop]');
+  let lastFocus: HTMLElement | null = null;
+
+  const openModal = () => {
+    if (!modal || modal.classList.contains('open')) return;
+    lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // lock page scroll while popped out
+    if (closeBtn instanceof HTMLElement) closeBtn.focus();
+  };
+
+  const closeModal = () => {
+    if (!modal || !modal.classList.contains('open')) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    lastFocus?.focus();
+  };
+
+  // Clicking the hero chip pops the card out.
+  trigger?.addEventListener('click', openModal);
+
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (!modal?.classList.contains('open')) return;
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    if (e.key === 'Tab') {
+      // Minimal focus trap inside the dialog
+      const focusables = modal.querySelectorAll<HTMLElement>('a[href], button');
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+</script>
