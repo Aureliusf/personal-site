@@ -1,4 +1,6 @@
 ---
+import PersonalityCard from './PersonalityCard.astro';
+
 export interface Props {
   compact?: boolean;
 }
@@ -29,6 +31,12 @@ I want to work close to users and own the path from an unclear problem through a
         </h1>
         <p class="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-line" set:html={bioText} />
       </div>
+    </section>
+
+    <!-- Personality card section -->
+    <section class="mb-12">
+      <h2 class="section-header mb-6">Personality Card</h2>
+      <PersonalityCard />
     </section>
 
     <section class="mb-12">

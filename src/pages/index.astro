@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostPreview from '../components/PostPreview.astro';
 import AboutContent from '../components/AboutContent.astro';
+import PersonalityCard from '../components/PersonalityCard.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 const allPosts = (await getCollection('posts')).sort(
@@ -49,10 +50,21 @@ const uniqueTags = Object.entries(tagCounts)
 
 <BaseLayout title="Aurelio Florez | AI and Operations Engineer">
   <section class="mb-12 pb-8 border-b border-[var(--border)]">
-    <div >
-      <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">
-        <span class="radar-name">Aurelio Florez</span>
-      </h1>
+    <div>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h1 class="text-2xl font-semibold text-[var(--text-primary)]">
+          <span class="radar-name">Aurelio Florez</span>
+        </h1>
+        <button data-card-trigger type="button" aria-haspopup="dialog" class="hero-card-chip">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="4.5" width="19" height="15" rx="1" />
+            <circle cx="8" cy="10.75" r="2.25" />
+            <path d="M4.75 16.5c.7-1.8 1.9-2.6 3.25-2.6s2.55.8 3.25 2.6" />
+            <path d="M14.5 9.5h4.75M14.5 12.5h4.75M14.5 15.5h2.75" />
+          </svg>
+          <span>Personality Card</span>
+        </button>
+      </div>
       <p class="text-[var(--text-muted)] text-sm">
       <AboutContent compact={true} />
       </p>
@@ -169,23 +181,284 @@ const uniqueTags = Object.entries(tagCounts)
           ))}
         </div>
       </section>
-
-      <section class="content-block card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Connect
-        </h3>
-        <div class="space-y-2 text-sm">
-          <a href="https://github.com/aureliusf" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            github.com/aureliusf
-          </a>
-          <a href="https://www.linkedin.com/in/aurelioflorez/" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            linkedin.com/in/aurelioflorez
-          </a>
-          <a href="/resume.pdf" class="block text-accent-pink hover:opacity-80 link-underline">
-            Download Resume
-          </a>
-        </div>
-      </section>
     </aside>
   </div>
+
+  <!-- Personality card pop-out -->
+  <dialog class="card-modal" data-card-modal aria-label="Aurelio Florez, personality card">
+    <div class="card-modal-backdrop" data-card-backdrop></div>
+    <div class="card-modal-stage" data-card-stage>
+      <div class="card-fly" data-card-fly>
+        <div class="card-float" data-card-float>
+          <PersonalityCard bare />
+        </div>
+      </div>
+      <div class="card-controls" data-card-controls>
+        <span class="card-hint">
+          <span class="card-hint-pointer">Drag to spin · Esc to close</span>
+          <span class="card-hint-touch">Swipe to spin · Tilt your phone</span>
+        </span>
+        <button data-card-close type="button" class="card-close" autofocus>
+          <span aria-hidden="true">✕</span> Close
+        </button>
+      </div>
+    </div>
+  </dialog>
 </BaseLayout>
+
+<style>
+  /* Sleek hero trigger chip */
+  .hero-card-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hero-card-chip:hover {
+    color: var(--accent-pink);
+    border-color: var(--accent-pink);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 12px rgba(236, 72, 153, 0.12);
+  }
+
+  .hero-card-chip:active {
+    transform: translateY(0);
+  }
+
+  /* Pop-out dialog: full-viewport, transparent; we draw our own backdrop
+     so it can fade in step with the card's flight. */
+  .card-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+    /* Card width: grows with large desktop screens, but always fits
+       narrow phones and short landscape screens */
+    --pc-width: min(max(360px, 26vw), 520px, 84vw, calc((100dvh - 8rem) * 5 / 7));
+  }
+
+  .card-modal::backdrop {
+    background: transparent;
+  }
+
+  :global(html.card-open) {
+    overflow: hidden;
+  }
+
+  .card-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(60, 64, 74, 0.35), transparent 60%),
+      rgba(9, 10, 12, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .card-modal-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+    height: 100%;
+    padding: 1.5rem;
+  }
+
+  .card-fly {
+    will-change: transform;
+  }
+
+  /* Gentle idle float once the card has landed */
+  .card-float.is-landed {
+    animation: cardFloat 7s ease-in-out infinite;
+  }
+
+  @keyframes cardFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .card-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(238, 240, 243, 0.45);
+  }
+
+  .card-hint-pointer {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-hint-pointer {
+      display: inline;
+    }
+
+    .card-hint-touch {
+      display: none;
+    }
+  }
+
+  .card-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: rgba(238, 240, 243, 0.75);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .card-close:hover,
+  .card-close:focus-visible {
+    color: #fff;
+    border-color: var(--accent-pink);
+    background: rgba(236, 72, 153, 0.1);
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-float.is-landed {
+      animation: none;
+    }
+
+  }
+</style>
+
+<script>
+  const modal = document.querySelector<HTMLDialogElement>('[data-card-modal]');
+  const trigger = document.querySelector<HTMLButtonElement>('[data-card-trigger]');
+
+  if (modal && trigger) {
+    const fly = modal.querySelector<HTMLElement>('[data-card-fly]')!;
+    const float = modal.querySelector<HTMLElement>('[data-card-float]')!;
+    const backdrop = modal.querySelector<HTMLElement>('[data-card-backdrop]')!;
+    const controls = modal.querySelector<HTMLElement>('[data-card-controls]')!;
+    const closeBtn = modal.querySelector<HTMLButtonElement>('[data-card-close]')!;
+    const card = modal.querySelector<HTMLElement>('[data-personality-card]')!;
+    const portrait = card.querySelector<HTMLImageElement>('img')!;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Warm the portrait before the first open so the card never pops in empty.
+    const preload = () => {
+      portrait.loading = 'eager';
+    };
+    ['pointerenter', 'focus', 'touchstart'].forEach((type) =>
+      trigger.addEventListener(type, preload, { once: true, passive: true }),
+    );
+    window.addEventListener('load', () => setTimeout(preload, 1500), { once: true });
+
+    let lastFocus: HTMLElement | null = null;
+    let closing = false;
+
+    const openModal = async () => {
+      if (modal.open) return;
+      lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      preload();
+      await Promise.race([portrait.decode().catch(() => {}), new Promise((r) => setTimeout(r, 150))]);
+
+      card.dispatchEvent(new Event('pc:reset'));
+      modal.showModal();
+      document.documentElement.classList.add('card-open');
+      closeBtn.focus({ preventScroll: true });
+
+      if (reduceMotion) {
+        modal.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 });
+        return;
+      }
+
+      // A quick, quiet entrance: fade in with a slight lift.
+      const enter = { duration: 200, easing: 'cubic-bezier(0.2, 0, 0, 1)' };
+      backdrop.animate([{ opacity: 0 }, { opacity: 1 }], enter);
+      controls.animate([{ opacity: 0 }, { opacity: 1 }], enter);
+      fly
+        .animate([{ transform: 'translateY(8px) scale(0.97)', opacity: 0 }, { transform: 'none', opacity: 1 }], enter)
+        .finished.then(() => float.classList.add('is-landed'))
+        .catch(() => {});
+    };
+
+    // Runs however the dialog ends up closed.
+    const cleanUp = () => {
+      closing = false;
+      float.classList.remove('is-landed');
+      document.documentElement.classList.remove('card-open');
+      fly.getAnimations().forEach((a) => a.cancel());
+      lastFocus?.focus({ preventScroll: true });
+    };
+
+    const closeModal = async () => {
+      if (!modal.open || closing) return;
+      closing = true;
+
+      if (!reduceMotion) {
+        float.classList.remove('is-landed');
+        const leave = { duration: 150, easing: 'ease-in', fill: 'forwards' as const };
+        backdrop.animate([{ opacity: 1 }, { opacity: 0 }], leave);
+        controls.animate([{ opacity: 1 }, { opacity: 0 }], leave);
+        await fly
+          .animate([{ transform: 'none', opacity: 1 }, { transform: 'scale(0.97)', opacity: 0 }], leave)
+          .finished.catch(() => {});
+      }
+
+      modal.close();
+      [backdrop, controls].forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
+    };
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('close', cleanUp);
+
+    // Esc: play the close animation instead of vanishing.
+    modal.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      closeModal();
+    });
+
+    // Clicks outside the card close it, but not the end of a drag that
+    // started on the card and wandered off.
+    let downOutside = false;
+    modal.addEventListener('pointerdown', (e) => {
+      downOutside = !(e.target as Element).closest('[data-personality-card], [data-card-controls]');
+    });
+    modal.addEventListener('click', (e) => {
+      if (downOutside && !(e.target as Element).closest('[data-personality-card], [data-card-controls]')) {
+        closeModal();
+      }
+      downOutside = false;
+    });
+  }
+</script>
