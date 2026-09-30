@@ -1,141 +1,209 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile } from '../data/agent-profile';
+import { isExternal, projectImages, shortTitle, sortedPosts } from '../data/site';
 
-interface Project {
-  name: string;
-  url: string;
-  description: string;
-  highlights: string[];
-  techStack: string[];
-  github?: string;
-  preview?: string;
-}
+const profileLinks = new Set(profile.projects.flatMap((p) => (p.links ?? []).map((l) => l.url)));
 
-const projects: Project[] = [
-  {
-    name: "saradm.com",
-    url: "/posts/saradmcom-fashion-portfolio-site",
-    description: "Fashion portfolio with custom Sanity CMS and serverless contact form.",
-    highlights: [
-      "99.9% uptime",
-      "Lighthouse perf. 100"
-    ],
-    techStack: ["Astro", "React", "Sanity", "Cloudflare"],
-    github: "https://github.com/Aureliusf/astro-saradm",
-    preview: "/images/saradm-preview.png"
-  },
-  {
-    name: "ResumeQuiver",
-    url: "/posts/resumequiver",
-    description: "Privacy-first YAML resume builder with AI copywriting and PDF export.",
-    highlights: [
-      "BYOK AI",
-      "Privacy-first"
-    ],
-    techStack: ["TypeScript", "React", "Vercel", "Sentry"],
-    github: "https://github.com/Aureliusf/resumequiver",
-    preview: "/images/resumequiver-preview.png"
-  }
-];
+const status = (p: { name: string; visibility?: string }) =>
+  p.name.includes('Langfuse') ? 'retired' : p.visibility === 'private' ? 'private' : 'public';
+
+// The profile is written in the third person for agents; this page speaks as me.
+const firstPerson = (line: string) => line.replace('how Aurelio scopes', 'how I scope');
+
+// Side projects: posts that ship code and aren't covered above.
+const side = (await sortedPosts())
+  .filter((post) => post.data.github && !profileLinks.has(post.data.github))
+  .map((post) => ({
+    name: shortTitle(post.data.title),
+    description: post.data.description ?? '',
+    year: post.data.date.getUTCFullYear(),
+    href: `/posts/${post.id}`,
+    github: post.data.github!,
+    liveUrl: post.data.liveUrl,
+  }));
 ---
 
-<BaseLayout title="Projects | Aurelio Florez" description="A showcase of web development projects by Aurelio Florez">
-  <section class="mb-8 pb-6 border-b border-[var(--border)]">
-    <h1 class="text-2xl font-semibold mb-3 text-[var(--text-primary)]">
-      <span class="radar-name">Projects</span>
-    </h1>
-    <p class="text-[var(--text-muted)] text-sm">
-      Production-ready applications built for real users.
+<BaseLayout title="Work · Aurelio Florez" description="Systems and side projects by Aurelio Florez, with what each one measured.">
+  <div class="col intro">
+    <h1 class="page-title">Work</h1>
+    <p class="muted">
+      Systems and side projects, including one that didn’t make it. What each one measured sits beside
+      it. My work at Melody AV and i4nm is on the <a class="link" href="/">front page</a>
+      and in the <a class="link" href="/resume.pdf">résumé</a>.
     </p>
-  </section>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {projects.map((project) => (
-      <article class="content-block card-hover group flex flex-col overflow-hidden">
-        <a 
-          href={project.url}
-          class="block relative -mx-4 -mt-4 mb-4 aspect-[16/10] overflow-hidden bg-[var(--bg-tertiary)]"
-        >
-          {project.preview ? (
-            <img 
-              src={project.preview} 
-              alt={`${project.name} preview`}
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <div class="w-full h-full flex items-center justify-center">
-              <span class="text-3xl opacity-20">
-                {project.name === "saradm.com" ? "👗" : "📄"}
-              </span>
-            </div>
-          )}
-          <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </a>
-
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-base font-semibold text-[var(--text-primary)]">
-            <a 
-              href={project.url}
-              class="link-underline hover:text-[var(--accent)] transition-colors"
-            >
-              {project.name}
-            </a>
-          </h2>
-          <span class="text-[var(--accent-emerald)] text-xs">●</span>
-        </div>
-        
-        <p class="text-[var(--text-secondary)] text-sm mb-3 leading-relaxed flex-1">
-          {project.description}
-        </p>
-
-        <div class="flex flex-wrap gap-1.5 mb-3">
-          {project.techStack.map((tech) => (
-            <span class="tag text-xs">{tech}</span>
-          ))}
-        </div>
-
-        <div class="flex items-center justify-between pt-3 border-t border-[var(--border)]">
-          <div class="flex gap-3 text-xs">
-            {project.highlights.map((highlight) => (
-              <span class="text-[var(--accent-amber)] font-mono">{highlight}</span>
-            ))}
-          </div>
-          
-          {project.github && (
-            <a 
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
-              title="Source"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-              </svg>
-            </a>
-          )}
-        </div>
-      </article>
-    ))}
-    
-    <a 
-      href="https://github.com/aureliusf"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="content-block card-hover group flex flex-col items-center justify-center text-center p-6 min-h-[280px]"
-    >
-      <svg class="w-8 h-8 text-[var(--text-muted)] mb-3 group-hover:text-[var(--accent)] transition-colors" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-      </svg>
-      <span class="text-sm font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">
-        More on GitHub
-      </span>
-      <span class="text-xs text-[var(--text-muted)] mt-1">
-        github.com/aureliusf
-      </span>
-    </a>
   </div>
 
+  {profile.projects.map((project, i) => {
+    const image = projectImages[project.name];
+    return (
+      <section class="project" aria-labelledby={`p-${i}`}>
+        <div class="project-text">
+          <h2 id={`p-${i}`}>{project.name}</h2>
+          <p class="kicker small"><span class="caps">{status(project)}</span> · {project.technologies.join(', ')}</p>
+          <p>{project.description}</p>
+          {project.links && (
+            <p class="small links">
+              {project.links.map((link) => (
+                <a class="link" href={link.url} rel={isExternal(link.url) ? 'noopener noreferrer' : undefined}>{link.label}</a>
+              ))}
+            </p>
+          )}
+        </div>
+        <ul class="evidence small" aria-label={`What ${project.name} measured`}>
+          {project.evidence.map((line) => <li>{firstPerson(line)}.</li>)}
+        </ul>
+        {image && (
+          <figure class="shot">
+            <picture>
+              <source srcset={image.webp} type="image/webp" />
+              <img src={image.src} alt={image.alt} width="800" height="481" loading="lazy" decoding="async" />
+            </picture>
+          </figure>
+        )}
+      </section>
+    );
+  })}
 
+  <section class="col side" aria-labelledby="side">
+    <h2 id="side">Smaller things</h2>
+    <p class="muted small">Weekend-sized projects. Each has source and a write-up.</p>
+    <ul>
+      {side.map((p) => (
+        <li>
+          <p>
+            <a class="link name" href={p.href}>{p.name}</a>
+            <span class="muted small figures">{p.year}</span>
+          </p>
+          <p class="small desc">{p.description}</p>
+          <p class="small links">
+            {p.liveUrl && <a class="link" href={p.liveUrl} rel="noopener noreferrer">Live</a>}
+            <a class="link" href={p.github} rel="noopener noreferrer">Source</a>
+          </p>
+          {projectImages[p.name] && (
+            <figure class="shot">
+              <picture>
+                <source srcset={projectImages[p.name].webp} type="image/webp" />
+                <img src={projectImages[p.name].src} alt={projectImages[p.name].alt} width="800" height="481" loading="lazy" decoding="async" />
+              </picture>
+            </figure>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
 </BaseLayout>
+
+<style>
+  .intro {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .intro > * + * {
+    margin-top: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+  }
+
+  .project,
+  .side {
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+    max-width: calc(var(--measure) + var(--gap) + var(--margin));
+  }
+
+  .side > * {
+    max-width: var(--measure);
+  }
+
+  .project {
+    display: grid;
+    gap: 1.25rem var(--gap);
+  }
+
+  .project-text {
+    max-width: var(--measure);
+  }
+
+  .evidence {
+    color: var(--ink-2);
+    font-variant-numeric: lining-nums;
+    max-width: var(--measure);
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule);
+  }
+
+  .evidence li + li {
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 1100px) {
+    .project {
+      grid-template-columns: var(--measure) var(--margin);
+    }
+
+    .evidence {
+      padding-left: 0;
+      border-left: 0;
+      padding-top: 0.35rem;
+    }
+
+    .project .shot {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .project h2,
+  .side h2 {
+    font-size: 1.4rem;
+  }
+
+  .kicker {
+    margin-top: 0.3rem;
+    margin-bottom: 0.9rem;
+    color: var(--ink-3);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.2rem;
+    margin-top: 0.8rem;
+  }
+
+  .shot {
+    margin-top: 0.75rem;
+  }
+
+  .side .shot {
+    margin-top: 1.25rem;
+  }
+
+  .shot img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 10px 30px -14px rgba(0, 0, 0, 0.3);
+  }
+
+  .side ul {
+    margin-top: 1.25rem;
+  }
+
+  .side li + li {
+    margin-top: 1.75rem;
+  }
+
+  .side .name {
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+
+  .desc {
+    margin-top: 0.2rem;
+    color: var(--ink-2);
+  }
+</style>

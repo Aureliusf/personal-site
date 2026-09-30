@@ -1,95 +1,141 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+import { formatDate, readingMinutes, sortedPosts, tagHue } from '../data/site';
 
 type Props = CollectionEntry<'posts'>['data'] & {
   slug: string;
-  github?: string;
-  liveUrl?: string;
+  body?: string;
 };
 
-const { title, description, date, tags, github, liveUrl } = Astro.props;
+const { title, description, date, tags, github, liveUrl, slug, body } = Astro.props;
 
-const formattedDate = date.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const posts = await sortedPosts();
+const index = posts.findIndex((p) => p.id === slug);
+const newer = index > 0 ? posts[index - 1] : undefined;
+const older = index >= 0 && index < posts.length - 1 ? posts[index + 1] : undefined;
+const minutes = readingMinutes(body);
 ---
 
-<BaseLayout title={title} description={description}>
-  <article class="max-w-3xl mx-auto">
-    <!-- Post Header -->
-    <header class="mb-8 pb-6 border-b border-[var(--border)]">
-      <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">{title}</h1>
-      <div class="flex items-center gap-4 text-sm text-[var(--text-muted)] font-mono">
-        <time datetime={date.toISOString()}>{formattedDate}</time>
+<BaseLayout title={`${title} · Aurelio Florez`} description={description}>
+  <article class="post">
+    <header class="col post-head">
+      <h1 class="post-title">{title}</h1>
+      {description && <p class="post-dek">{description}</p>}
+      <aside class="post-meta small" aria-label="About this post">
+        <p><time datetime={date.toISOString()}>{formatDate(date, 'long')}</time> · {minutes} min read</p>
         {tags && tags.length > 0 && (
-          <span class="flex gap-2">
-            {tags.map((tag) => (
-              <a 
-                href={`/tags/${tag}`} 
-                class="text-accent-pink hover:opacity-80 link-underline"
-              >
-                #{tag}
-              </a>
-            ))}
-          </span>
+          <p class="tags">{tags.map((tag) => <a href={`/tags/${tag}`} style={`--c:${tagHue(tag)}`}><span class="swatch" aria-hidden="true" />{tag}</a>)}</p>
         )}
-        {liveUrl && (
-          <a 
-            href={liveUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="flex items-center gap-1 text-accent-emerald link-emerald link-underline"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            <span>Visit Live Site</span>
-          </a>
+        {(liveUrl || github) && (
+          <p class="links">
+            {liveUrl && <a class="link" href={liveUrl} rel="noopener noreferrer">Live site</a>}
+            {github && <a class="link" href={github} rel="noopener noreferrer">Source</a>}
+          </p>
         )}
-        {github && (
-          <a 
-            href={github} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="flex items-center gap-1 text-accent-emerald link-emerald link-underline"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            <span>View on GitHub</span>
-          </a>
-        )}
-      </div>
+      </aside>
     </header>
 
-    <!-- Post Content -->
-    <div class="prose">
+    <div class="col prose post-body">
       <slot />
     </div>
-
-    <!-- Post Footer -->
-    <footer class="mt-12 pt-6 border-t border-[var(--border)]">
-      <div class="flex items-center justify-between">
-        <a 
-          href="/archives" 
-          class="text-sm link-emerald link-underline"
-        >
-          ← Back to archives
-        </a>
-        <div class="flex gap-2">
-          {tags && tags.length > 0 && tags.map((tag) => (
-            <a 
-              href={`/tags/${tag}`} 
-              class="tag hover-scale"
-            >
-              {tag}
-            </a>
-          ))}
-        </div>
-      </div>
-    </footer>
   </article>
+
+  <nav class="col post-nav small" aria-label="More writing">
+    {older && (
+      <p><span class="muted">Older</span> <a class="link" href={`/posts/${older.id}`}>{older.data.title}</a></p>
+    )}
+    {newer && (
+      <p><span class="muted">Newer</span> <a class="link" href={`/posts/${newer.id}`}>{newer.data.title}</a></p>
+    )}
+    <p><span class="muted">All</span> <a class="link" href="/archives">Everything I’ve written</a></p>
+  </nav>
 </BaseLayout>
+
+<style>
+  .post-head {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .post-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .post-dek {
+    margin-top: 0.9rem;
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .post-meta {
+    margin-top: 1.4rem;
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.8rem;
+  }
+
+  .tags a {
+    transition: color 0.2s ease;
+  }
+
+  .tags a:hover {
+    color: var(--c);
+  }
+
+  .swatch {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.4em;
+    border-radius: 1px;
+    background: var(--c);
+    vertical-align: 0.08em;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  /* Wide screens: the post's details sit in the margin beside the title */
+  @media (min-width: 1100px) {
+    .post-head {
+      position: relative;
+    }
+
+    .post-meta {
+      position: absolute;
+      top: clamp(2.5rem, 7vw, 5rem);
+      left: calc(var(--measure) + var(--gap));
+      width: var(--margin);
+      margin-top: 0.55rem;
+    }
+
+    .tags {
+      flex-direction: column;
+    }
+  }
+
+  .post-nav {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .post-nav .muted {
+    display: inline-block;
+    min-width: 3.5rem;
+  }
+</style>

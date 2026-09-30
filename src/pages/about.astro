@@ -1,8 +1,122 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import AboutContent from '../components/AboutContent.astro';
+import PersonalityCard from '../components/PersonalityCard.astro';
+import { profile } from '../data/agent-profile';
+
+const skillGroups = [
+  { label: 'Languages', items: profile.skills.languages },
+  { label: 'AI and automation', items: profile.skills.aiAndAutomation },
+  { label: 'Backend and data', items: profile.skills.backendAndData },
+  { label: 'Infrastructure', items: profile.skills.infrastructure },
+  { label: 'Frontend', items: profile.skills.frontend },
+];
 ---
 
-<BaseLayout title="About - Aurelio Florez">
-  <AboutContent />
+<BaseLayout title="About · Aurelio Florez">
+  <div class="col about">
+    <h1 class="page-title">About</h1>
+
+    <p>
+      I’m most interested in AI agents that do bounded, reversible work, the evals and infrastructure around them,
+      and workflow automation that removes repetitive manual steps.
+    </p>
+    <p>
+      I want to work close to users and own the path from an unclear problem through architecture, deployment, and
+      handoff. I’m heading toward AI, backend, infrastructure, and forward-deployed engineering roles where that
+      range is useful.
+    </p>
+
+    <h2>The short version</h2>
+    <p class="muted small">Click or tap to flip it. Drag to spin it.</p>
+    <div class="card-slot">
+      <PersonalityCard eager />
+    </div>
+
+    <h2>A few rules I work by</h2>
+    <ol class="rules">
+      {profile.principles.map((line) => <li>{line}</li>)}
+    </ol>
+
+    <h2>School</h2>
+    <dl>
+      {profile.education.map((item) => (
+        <div>
+          <dt>{item.school}</dt>
+          <dd>{item.degree}{'detail' in item && item.detail ? `, ${item.detail}` : ''}. <span class="muted">{item.dates}.</span></dd>
+        </div>
+      ))}
+    </dl>
+
+    <h2>Tools</h2>
+    <dl>
+      {skillGroups.map((group) => (
+        <div>
+          <dt>{group.label}</dt>
+          <dd>{group.items.join(', ')}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <h2>Elsewhere</h2>
+    <p>
+      I live in {profile.location} and work in {profile.languages.join(' and ')}. Email is best:
+      <a class="link" href={`mailto:${profile.email}`}>{profile.email}</a>. There’s also
+      <a class="link" href={profile.links.github} rel="noopener noreferrer">GitHub</a>,
+      <a class="link" href={profile.links.linkedin} rel="noopener noreferrer">LinkedIn</a>,
+      <a class="link" href={profile.links.x} rel="noopener noreferrer">X</a>, and a
+      <a class="link" href="/resume.pdf">résumé</a>.
+    </p>
+  </div>
 </BaseLayout>
+
+<style>
+  .about {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .about > * + * {
+    margin-top: 1.05em;
+  }
+
+  .page-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+    margin-bottom: 1.2em;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin-top: 2.6em !important;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .card-slot {
+    margin-top: 0 !important;
+  }
+
+  .rules {
+    list-style: decimal;
+    padding-left: 1.3em;
+  }
+
+  .rules li + li {
+    margin-top: 0.5em;
+  }
+
+  .rules li::marker {
+    color: var(--accent);
+    font-variant-numeric: lining-nums;
+  }
+
+  dl > div + div {
+    margin-top: 0.8rem;
+  }
+
+  dt {
+    font-weight: 600;
+  }
+
+  dd {
+    color: var(--ink-2);
+  }
+</style>

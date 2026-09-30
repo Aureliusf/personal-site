@@ -1,52 +1,57 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostPreview from '../../components/PostPreview.astro';
+import Topics from '../../components/Topics.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { pullQuotes } from '../../data/site';
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection('posts');
+  const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   const uniqueTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))];
 
-  return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts.filter((post) => (post.data.tags || []).includes(tag));
-    return {
-      params: { tag },
-      props: { posts: filteredPosts },
-    };
-  });
+  return uniqueTags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: allPosts.filter((post) => (post.data.tags || []).includes(tag)),
+      allPosts,
+    },
+  }));
 }
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
-
-const sortedPosts = posts.sort(
-  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf()
-);
+const { posts, allPosts } = Astro.props as { posts: CollectionEntry<'posts'>[]; allPosts: CollectionEntry<'posts'>[] };
 ---
 
-<BaseLayout title={`#${tag} - Aurelio Florez`}>
-  <div class="mb-8 pb-6 border-b border-[var(--border)]">
-    <h1 class="text-2xl font-semibold mb-2 text-[var(--text-primary)]">
-      <span class="text-[var(--accent)]">#</span>{tag}
-    </h1>
-    <p class="text-[var(--text-muted)] text-sm">
-      {sortedPosts.length} {sortedPosts.length === 1 ? 'post' : 'posts'} tagged
+<BaseLayout title={`${tag} · Aurelio Florez`}>
+  <div class="col intro">
+    <h1 class="page-title">{tag}</h1>
+    <p class="muted">
+      {posts.length} {posts.length === 1 ? 'post' : 'posts'}.
+      <a class="link" href="/archives">All writing</a>
     </p>
+    <Topics posts={allPosts} current={tag} />
   </div>
 
-  <div class="border-t border-[var(--border)]">
-    {sortedPosts.map((post: CollectionEntry<'posts'>) => (
-      <PostPreview post={post} />
-    ))}
-  </div>
-
-  <div class="mt-8 pt-6 border-t border-[var(--border)]">
-    <a 
-      href="/archives" 
-      class="text-sm text-[var(--text-muted)] hover:text-[var(--accent)] link-underline transition-colors"
-    >
-      ← Back to archives
-    </a>
+  <div class="col list">
+    {posts.map((post) => <PostPreview post={post} dateStyle="short" quote={pullQuotes[post.id]} />)}
   </div>
 </BaseLayout>
+
+<style>
+  .intro {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .intro > * + * {
+    margin-top: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+  }
+
+  .list {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+</style>

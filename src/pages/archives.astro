@@ -1,73 +1,62 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostPreview from '../components/PostPreview.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import Topics from '../components/Topics.astro';
+import type { CollectionEntry } from 'astro:content';
+import { pullQuotes, sortedPosts } from '../data/site';
 
-const allPosts = (await getCollection('posts')).sort(
-  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf()
-);
+const allPosts = await sortedPosts();
 
-// Group posts by year
-const postsByYear = allPosts.reduce((acc: { [key: string]: CollectionEntry<'posts'>[] }, post) => {
-  const year = post.data.date.getFullYear().toString();
-  if (!acc[year]) {
-    acc[year] = [];
-  }
-  acc[year].push(post);
+const postsByYear = allPosts.reduce<Record<string, CollectionEntry<'posts'>[]>>((acc, post) => {
+  const year = post.data.date.getUTCFullYear().toString();
+  (acc[year] ??= []).push(post);
   return acc;
 }, {});
 
-const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a));
-
-// Get all unique tags
-const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sort();
+const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 ---
 
-<BaseLayout title="Archives - Aurelio Florez">
-  <div class="mb-8 pb-6 border-b border-[var(--border)]">
-    <h1 class="text-2xl font-semibold mb-2 text-[var(--text-primary)]">Archives</h1>
-    <p class="text-[var(--text-muted)] text-sm">
-      {allPosts.length} posts across {years.length} years
+<BaseLayout title="Writing · Aurelio Florez" description="Posts by Aurelio Florez on AI agents, self-hosting, NixOS, and the things he builds.">
+  <div class="col intro">
+    <h1 class="page-title">Writing</h1>
+    <p class="muted">
+      Notes from building things: what agents cost, self-hosting, NixOS, and write-ups of projects. Also by
+      <a class="link" href="/rss.xml">RSS</a>.
     </p>
+    <Topics posts={allPosts} />
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <!-- Main content -->
-    <div class="lg:col-span-9">
-      {years.map((year) => (
-        <section class="mb-8">
-          <h2 class="text-lg font-semibold mb-4 text-[var(--accent)] font-mono">{year}</h2>
-          <div class="border-t border-[var(--border)]">
-            {postsByYear[year].map((post: CollectionEntry<'posts'>) => (
-              <PostPreview post={post} />
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="lg:col-span-3">
-      <section class="content-block sticky top-4 card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Tags
-        </h3>
-        {allTags.length > 0 ? (
-          <div class="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <a 
-                href={`/tags/${tag}`} 
-                class="tag hover-scale hover:bg-[var(--accent)] hover:text-[var(--bg-primary)]"
-              >
-                #{tag}
-              </a>
-            ))}
-          </div>
-        ) : (
-          <p class="text-sm text-[var(--text-muted)]">No tags yet</p>
-        )}
-      </section>
-    </aside>
-  </div>
+  {years.map((year) => (
+    <section class="col year" aria-labelledby={`y-${year}`}>
+      <h2 id={`y-${year}`} class="year-title">{year}</h2>
+      <div>
+        {postsByYear[year].map((post) => <PostPreview post={post} dateStyle="short" quote={pullQuotes[post.id]} />)}
+      </div>
+    </section>
+  ))}
 </BaseLayout>
+
+<style>
+  .intro {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .intro > * + * {
+    margin-top: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+  }
+
+  .year {
+    margin-top: 3rem;
+  }
+
+  .year-title {
+    font-size: 1rem;
+    font-variant-numeric: lining-nums;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>

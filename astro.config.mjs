@@ -4,6 +4,14 @@ import mermaid from 'astro-mermaid';
 
 export default defineConfig({
   site: 'https://aurelioflorez.com',
+  // Keep whitespace between inline elements that sit on separate source lines
+  compressHTML: false,
+  devToolbar: { enabled: false },
+  markdown: {
+    shikiConfig: {
+      themes: { light: 'gruvbox-light-medium', dark: 'gruvbox-dark-hard' },
+    },
+  },
   integrations: [
     mdx(),
     mermaid(),

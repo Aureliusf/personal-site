@@ -1,0 +1,224 @@
+---
+/**
+ * A small board that shows the King's Gambit and can replay it.
+ * Squares are [file 0–7 (a–h), rank-row 0–7 (8 at the top)].
+ */
+type Piece = { id: string; glyph: string; side: 'w' | 'b'; at: [number, number] };
+
+const back = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
+const whiteBack = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
+// Solid glyphs for both sides; color comes from CSS. U+FE0E keeps pawns out of emoji.
+const solid: Record<string, string> = { '♖': '♜', '♘': '♞', '♗': '♝', '♕': '♛', '♔': '♚', '♙': '♟' };
+
+const pieces: Piece[] = [];
+back.forEach((g, f) => pieces.push({ id: `b${f}`, glyph: g, side: 'b', at: [f, 0] }));
+for (let f = 0; f < 8; f++) pieces.push({ id: `bp${f}`, glyph: '♟', side: 'b', at: [f, 1] });
+for (let f = 0; f < 8; f++) pieces.push({ id: `wp${f}`, glyph: solid['♙'], side: 'w', at: [f, 6] });
+whiteBack.forEach((g, f) => pieces.push({ id: `w${f}`, glyph: solid[g], side: 'w', at: [f, 7] }));
+
+// 1. e4 e5 2. f4
+const moves = [
+  { san: 'e4', piece: 'wp4', from: [4, 6], to: [4, 4] },
+  { san: 'e5', piece: 'bp4', from: [4, 1], to: [4, 3] },
+  { san: 'f4', piece: 'wp5', from: [5, 6], to: [5, 4] },
+];
+
+// Render the final position by default.
+const finalAt = new Map(moves.map((m) => [m.piece, m.to as [number, number]]));
+const last = moves[moves.length - 1];
+---
+
+<figure class="gambit" data-moves={JSON.stringify(moves)}>
+  <div class="board" role="img" aria-label="Chess board after 1. e4 e5 2. f4, the King’s Gambit">
+    {Array.from({ length: 64 }, (_, i) => (
+      <span class:list={['sq', (Math.floor(i / 8) + (i % 8)) % 2 ? 'dark' : 'light']} />
+    ))}
+    <span class="hl" data-hl="from" style={`--f:${last.from[0]};--r:${last.from[1]}`} />
+    <span class="hl" data-hl="to" style={`--f:${last.to[0]};--r:${last.to[1]}`} />
+    {pieces.map((p) => {
+      const [f, r] = finalAt.get(p.id) ?? p.at;
+      return (
+        <span class:list={['pc', p.side]} data-id={p.id} data-home={`${p.at[0]},${p.at[1]}`} style={`--f:${f};--r:${r}`} aria-hidden="true">
+          {p.glyph}{'︎'}
+        </span>
+      );
+    })}
+  </div>
+  <figcaption>
+    <button type="button" class="replay">
+      <span class="moves" aria-hidden="true">
+        <span>1.</span> <span data-san="0">e4</span> <span data-san="1">e5</span> <span>2.</span> <span data-san="2">f4</span>
+      </span>
+      <span class="replay-label">Replay</span>
+    </button>
+    <span class="caption">The King’s Gambit. It looks cool. I don’t know the theory.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .gambit {
+    margin: 1.75rem auto;
+    width: min(100%, 15rem);
+  }
+
+  @media (min-width: 1100px) {
+    .gambit {
+      float: right;
+      clear: right;
+      /* Sits in the letter itself (not a paragraph), so the right edge is already the margin column */
+      width: var(--margin);
+      margin: 1.4rem 0 1rem var(--gap);
+    }
+  }
+
+  .board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    aspect-ratio: 1;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+
+  .sq.light {
+    background: var(--board-light);
+  }
+
+  .sq.dark {
+    background: var(--board-dark);
+  }
+
+  .hl,
+  .pc {
+    position: absolute;
+    width: 12.5%;
+    height: 12.5%;
+    left: calc(var(--f) * 12.5%);
+    top: calc(var(--r) * 12.5%);
+  }
+
+  .hl {
+    background: var(--accent-wash);
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--gb-yellow) 55%, transparent);
+    transition: opacity 0.3s ease;
+  }
+
+  .gambit.is-resetting .hl {
+    opacity: 0;
+  }
+
+  .pc {
+    display: grid;
+    place-items: center;
+    font-family: var(--font-chess);
+    font-size: 1.45rem;
+    line-height: 1;
+    transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1), top 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    user-select: none;
+  }
+
+  .gambit.is-resetting .pc {
+    transition: none;
+  }
+
+  .pc.w {
+    color: #fbf1c7;
+    -webkit-text-stroke: 0.9px #282828;
+    paint-order: stroke fill;
+  }
+
+  .pc.b {
+    color: #282828;
+  }
+
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .replay {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .moves {
+    font-variant-numeric: lining-nums;
+    color: var(--ink-3);
+  }
+
+  .moves [data-san] {
+    font-weight: 600;
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+
+  .moves [data-san].is-now {
+    color: var(--note);
+  }
+
+  .replay-label {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  .replay:hover .replay-label {
+    text-decoration-color: currentColor;
+  }
+
+  .caption {
+    display: block;
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.gambit').forEach((fig) => {
+    const moves: { san: string; piece: string; from: number[]; to: number[] }[] = JSON.parse(fig.dataset.moves ?? '[]');
+    const button = fig.querySelector<HTMLButtonElement>('.replay');
+    const hl = (which: string) => fig.querySelector<HTMLElement>(`[data-hl="${which}"]`)!;
+    const piece = (id: string) => fig.querySelector<HTMLElement>(`[data-id="${id}"]`)!;
+    const place = (el: HTMLElement, [f, r]: number[]) => {
+      el.style.setProperty('--f', String(f));
+      el.style.setProperty('--r', String(r));
+    };
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timers: number[] = [];
+
+    button?.addEventListener('click', () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+      fig.classList.add('is-resetting');
+      fig.querySelectorAll<HTMLElement>('.pc').forEach((el) => place(el, el.dataset.home!.split(',').map(Number)));
+      fig.querySelectorAll('.is-now').forEach((el) => el.classList.remove('is-now'));
+      void fig.offsetWidth; // commit the reset before animating
+      fig.classList.remove('is-resetting');
+
+      const step = reduced.matches ? 0 : 750;
+      moves.forEach((m, i) => {
+        timers.push(
+          window.setTimeout(() => {
+            place(piece(m.piece), m.to);
+            place(hl('from'), m.from);
+            place(hl('to'), m.to);
+            fig.querySelectorAll('.is-now').forEach((el) => el.classList.remove('is-now'));
+            fig.querySelector(`[data-san="${i}"]`)?.classList.add('is-now');
+          }, 350 + i * step),
+        );
+      });
+    });
+  });
+</script>

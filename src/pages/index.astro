@@ -1,191 +1,155 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Note from '../components/Note.astro';
 import PostPreview from '../components/PostPreview.astro';
-import AboutContent from '../components/AboutContent.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import KingsGambit from '../components/KingsGambit.astro';
+import CardTrigger from '../components/CardTrigger.astro';
+import CardModal from '../components/CardModal.astro';
+import { profile } from '../data/agent-profile';
+import { pullQuotes, sortedPosts } from '../data/site';
 
-const allPosts = (await getCollection('posts')).sort(
-  (a: CollectionEntry<'posts'>, b: CollectionEntry<'posts'>) =>
-    b.data.date.valueOf() - a.data.date.valueOf()
-);
+const posts = await sortedPosts();
+const recent = posts.slice(0, 6);
 
-const featuredPosts = allPosts
-  .filter((post: CollectionEntry<'posts'>) => post.data.featured)
-  .slice(0, 4);
-
-const featuredPostData = featuredPosts.map((post: CollectionEntry<'posts'>) => {
-  const year = post.data.date.getFullYear();
-  const tags = post.data.tags || [];
-  const techStack = tags.slice(0, 3).join(' + ');
-  const meta = `${year} ${techStack ? '· ' + techStack : ''}`;
-  return {
-    slug: post.id,
-    title: post.data.title,
-    meta: meta,
-    highlight: post.data.highlight,
-    github: post.data.github
-  };
-});
-
-const featuredSlugs = new Set(featuredPosts.map((p: CollectionEntry<'posts'>) => p.id));
-const recentPosts = allPosts
-  .slice(0, 10);
-
-const allTags = allPosts
-  .flatMap((post: CollectionEntry<'posts'>) => post.data.tags || [])
-  .filter((tag): tag is string => tag !== null && tag !== undefined)
-  .filter((tag) => tag !== 'featured');
-
-const tagCounts = allTags.reduce((acc, tag) => {
-  acc[tag] = (acc[tag] || 0) + 1;
-  return acc;
-}, {} as Record<string, number>);
-
-const uniqueTags = Object.entries(tagCounts)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 10)
-  .map(([tag]) => tag);
+const builds = [
+  { name: 'saradm.com', href: '/posts/saradmcom-fashion-portfolio-site', line: 'a portfolio and CMS for a fashion stylist, about 1,100 visitors a month' },
+  { name: 'ResumeQuiver', href: '/posts/resumequiver', line: 'a resume builder where the resume is YAML and you bring your own AI key' },
+  { name: 'Markdown2Paper', href: '/posts/markdown2paper', line: 'an Obsidian plugin that turns notes into formatted papers, built in three hours' },
+  { name: 'n8n on NixOS', href: '/posts/nixos', line: 'workflow automation for my father’s small business, without opening my network' },
+];
 ---
 
-<BaseLayout title="Aurelio Florez | AI and Operations Engineer">
-  <section class="mb-12 pb-8 border-b border-[var(--border)]">
-    <div >
-      <h1 class="text-2xl font-semibold mb-4 text-[var(--text-primary)]">
-        <span class="radar-name">Aurelio Florez</span>
-      </h1>
-      <p class="text-[var(--text-muted)] text-sm">
-      <AboutContent compact={true} />
-      </p>
+<BaseLayout title="Aurelio Florez">
+  <article class="letter col">
+    <CardTrigger variant="margin" />
+    <p class="lede">I like turning loosely defined problems into systems people can actually use.</p>
+
+    <p>
+      This summer, as the AI and operations engineering intern at Melody AV in Miami, that meant a governed,
+      read-only bridge into the company’s Sage 100 ERP,<Note n={1}>SageBridge: an MCP server with 12 endpoints
+      over 60 approved Sage operations. It replaced about 15 monthly reporting requests that used to mean
+      accounting exporting and combining reports by hand. June–July 2026.</Note> an invoice pipeline that reads 23
+      vendor formats and matches them to purchase orders,<Note n={2}>In its first 20 days it processed 150 invoices
+      and matched 105 of 110 valid ones without intervention, about 26 hours of manual PO checks
+      removed.</Note> and sixteen Claude skills for people in finance, sales operations, and field service. I
+      onboarded five of them. Four kept using what I built.<Note n={3}>Before the executive reports were released, a 150-run
+      evaluation checked them against historical reports written by people. About 130 runs matched the records
+      and totals.</Note>
+    </p>
+
+    <p>
+      At home I run a small NixOS and Libvirt platform on a UPS: isolated VMs for private business software and
+      five AI agents, all behind one LiteLLM gateway. One of them is Paquita, my OpenClaw agent, which takes the first
+      pass at most of my side projects. It usually gets me 70% of the way; I get it the rest.<Note n={4}>About 110 million tokens a week. The host and
+      gateway have run 90 days without an unplanned outage. In a recovery drill SSH was back 19 seconds
+      after boot, LiteLLM 36.</Note> Most of what I write comes out of it:
+      <a class="link" href="/posts/firecrawl-vs-playwright">what a browser costs an agent</a>,
+      <a class="link" href="/posts/tunneling-solutions">how to share a service without sharing the network</a>,
+      and <a class="link" href="/posts/nixos-fixing-unstable-packages">what to do when nixpkgs falls behind</a>.
+    </p>
+
+    <p>
+      Not everything I try ships. I ran a tracing fork of Hermes Agent on four agents for three weeks. The traces
+      made a news-gathering skill better, and the pull request was rejected upstream as too broad.<Note n={5}>Too
+      broad and too coupled, fairly. The fork is retired in favor of upstream Hermes and LiteLLM
+      observability.</Note> I scope work for coding agents differently now. The smaller fix landed: I diagnosed a
+      headless OAuth bug in the same project and wrote the reproductions and regression cases for a fix that
+      merged about a day later.<Note n={6}>Another contributor wrote the implementation.
+      <a class="link" href="https://github.com/NousResearch/hermes-agent/issues/57836" rel="noopener noreferrer">The issue</a>.</Note>
+    </p>
+
+    <KingsGambit />
+    <p>
+      While an agent is thinking, I play chess. Badly: I’m rated around 200, and I open with the King’s Gambit
+      because it looks cool. Switching to a browser tab for one-minute blitz wrecked my focus, so I built
+      <a class="link" href="/posts/prompt-chess">Prompt-chess</a>, a board that opens in tmux when OpenCode goes
+      quiet and disappears when it’s done. The idea was stupid. I knew it was stupid. That’s why I loved it.
+    </p>
+
+    <p>
+      Before Miami I spent almost three years in León, Spain, as a junior developer at i4nm. I moved more than
+      150,000 invoices and 10,000 customer records from one ERP to another,<Note n={7}>VisualNT to Holded, with a
+      Python utility against the REST API. The team checked every customer and reconciled historical totals
+      through year-end reports. 2018–2021.</Note> and wrote a WooCommerce plugin that took stale-inventory refunds
+      from about sixty a month to one, across more than fifty stores.
+    </p>
+
+    <p>
+      Now I’m finishing a computer science degree at FIU and looking for AI, backend, infrastructure, or
+      forward-deployed engineering work, close to the people who use what I build. If that sounds like your team,
+      <a class="link" href={`mailto:${profile.email}`}>write to me</a>. The
+      <a class="link" href="/resume.pdf">résumé</a> has the short version.
+    </p>
+
+    <p class="signoff">Un saludo,<br />Aurelio</p>
+    <CardTrigger variant="ps" />
+  </article>
+
+  <section class="index col" aria-labelledby="writing">
+    <h2 id="writing">Writing</h2>
+    <div>
+      {recent.map((post) => <PostPreview post={post} quote={pullQuotes[post.id]} />)}
     </div>
+    <p class="more"><a class="link" href="/archives">All {posts.length} posts</a></p>
   </section>
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-8">
-      <section class="mb-12">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="section-header">Projects</h2>
-          <a href="/projects" class="text-sm text-accent-pink hover:opacity-80 link-underline">
-            View all →
-          </a>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="project-item card-hover hover-glow overflow-hidden">
-            <a href="/posts/saradmcom-fashion-portfolio-site" class="block">
-              <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
-                <picture>
-                  <source srcset="/images/webp/saradm-preview.webp" type="image/webp" />
-                  <img 
-                    src="/images/saradm-preview.png" 
-                    alt="saradm.com preview"
-                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                    width="800"
-                    height="481"
-                  />
-                </picture>
-              </div>
-              <div class="project-title link-underline">Portfolio Site for Fashion Stylist</div>
-              <div class="project-meta">Astro + Sanity CMS on Cloudflare</div>
-              <div class="project-metrics">99.9% uptime · Lighthouse perf. 100</div>
-            </a>
-          </div>
-          <div class="project-item card-hover hover-glow overflow-hidden">
-            <a href="/posts/resumequiver" class="block">
-              <div class="aspect-[16/10] mb-3 -mx-4 -mt-4 overflow-hidden">
-                <picture>
-                  <source srcset="/images/webp/resumequiver.webp" type="image/webp" />
-                  <img 
-                    src="/images/resumequiver-preview.png" 
-                    alt="ResumeQuiver preview"
-                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                    width="800"
-                    height="481"
-                  />
-                </picture>
-              </div>
-              <div class="project-title link-underline">ResumeQuiver</div>
-              <div class="project-meta">TypeScript + React + Vercel</div>
-              <div class="project-metrics">YAML-based · BYOK AI</div>
-            </a>
-          </div>
-        </div>
-      </section>
+  <section class="index col" aria-labelledby="built">
+    <h2 id="built">Things I’ve built</h2>
+    <ul class="builds">
+      {builds.map((b) => (
+        <li><a class="link" href={b.href}>{b.name}</a>, {b.line}</li>
+      ))}
+    </ul>
+    <p class="more"><a class="link" href="/projects">More on the work page</a></p>
+  </section>
 
-      {featuredPostData.length > 0 && (
-        <section class="mb-12">
-          <h2 class="section-header mb-6">Featured Posts</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {featuredPostData.map((item) => (
-              <div class="project-item card-hover hover-glow relative">
-                <a href={`/posts/${item.slug}`} class="block">
-                  <div class="project-title link-underline">
-                    {item.title}
-                  </div>
-                  <div class="project-meta">{item.meta}</div>
-                  {item.highlight && (
-                    <div class="project-metrics">{item.highlight}</div>
-                  )}
-                </a>
-                {item.github && (
-                  <a href={item.github} target="_blank" rel="noopener noreferrer" class="project-github hover:text-[var(--accent)] transition-colors mt-2 inline-flex items-center">
-                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    <span class="text-xs">{item.github.replace('https://github.com/', '')}</span>
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section>
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="section-header">Recent Posts</h2>
-          <a href="/archives" class="text-sm text-accent-pink hover:opacity-80 link-underline">
-            View all →
-          </a>
-        </div>
-        <div class="border-t border-[var(--border)]">
-          {recentPosts.map((post: CollectionEntry<'posts'>) => (
-            <PostPreview post={post} />
-          ))}
-        </div>
-      </section>
-    </div>
-
-    <aside class="lg:col-span-4 space-y-8">
-      <section class="content-block card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Technologies
-        </h3>
-        <div class="flex flex-wrap gap-2">
-          {uniqueTags.map((skill) => (
-            <a href={`/tags/${skill}`} class="tag hover-scale">{skill}</a>
-          ))}
-        </div>
-      </section>
-
-      <section class="content-block card-hover">
-        <h3 class="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-4 pb-2 border-b border-[var(--border)]">
-          Connect
-        </h3>
-        <div class="space-y-2 text-sm">
-          <a href="https://github.com/aureliusf" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            github.com/aureliusf
-          </a>
-          <a href="https://www.linkedin.com/in/aurelioflorez/" class="block text-accent-pink hover:opacity-80 link-underline" target="_blank" rel="noopener noreferrer">
-            linkedin.com/in/aurelioflorez
-          </a>
-          <a href="/resume.pdf" class="block text-accent-pink hover:opacity-80 link-underline">
-            Download Resume
-          </a>
-        </div>
-      </section>
-    </aside>
-  </div>
+  <CardModal />
 </BaseLayout>
+
+<style>
+  .letter {
+    padding-top: clamp(3rem, 9vw, 6.5rem);
+  }
+
+  .letter > p + p,
+  .letter > :global(figure) + p {
+    margin-top: 1.05em;
+  }
+
+  .lede {
+    font-size: clamp(1.6rem, 3.2vw, 2.05rem);
+    line-height: 1.28;
+    font-weight: 420;
+    letter-spacing: -0.012em;
+    margin-bottom: 1.6em;
+  }
+
+  .signoff {
+    font-style: italic;
+    margin-top: 1.6em !important;
+  }
+
+  .index {
+    margin-top: clamp(4rem, 9vw, 6rem);
+  }
+
+  .index h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .builds {
+    margin-top: 1rem;
+  }
+
+  .builds li + li {
+    margin-top: 0.55rem;
+  }
+
+  .more {
+    margin-top: 1.1rem;
+    font-size: 0.9375rem;
+  }
+</style>

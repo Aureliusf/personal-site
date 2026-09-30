@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Not found · Aurelio Florez">
+  <div class="col lost">
+    <h1 class="page-title">Blunder.</h1>
+    <p>There’s nothing at this address. Maybe it moved, maybe it never existed, maybe I hung my queen again.</p>
+    <p>
+      Try the <a class="link" href="/">front page</a>, the <a class="link" href="/archives">writing</a>, or
+      <a class="link" href="/projects">the work</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .lost {
+    padding-top: clamp(3rem, 9vw, 6.5rem);
+  }
+
+  .lost > * + * {
+    margin-top: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { tagHue } from '../data/site';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+  current?: string;
+}
+
+const { posts, current } = Astro.props;
+
+const counts = posts
+  .flatMap((post) => post.data.tags ?? [])
+  .reduce<Record<string, number>>((acc, tag) => {
+    acc[tag] = (acc[tag] ?? 0) + 1;
+    return acc;
+  }, {});
+
+const tags = Object.entries(counts).sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'en', { sensitivity: 'base' }),
+);
+---
+
+<nav class="topics small" aria-label="Topics">
+  <span class="muted">Topics:</span>
+  {tags.map(([tag, count]) => (
+    <a href={`/tags/${tag}`} aria-current={tag === current ? 'page' : undefined} style={`--c:${tagHue(tag)}`}>
+      <span class="swatch" aria-hidden="true"></span>{tag}<sup>{count}</sup>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.9rem;
+    color: var(--ink-2);
+  }
+
+  a {
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+
+  a[aria-current='page'] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+  }
+
+  .swatch {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.35em;
+    border-radius: 1px;
+    background: var(--c);
+    vertical-align: 0.08em;
+  }
+
+  a:hover {
+    color: var(--c);
+  }
+
+  sup {
+    margin-left: 0.1em;
+    color: var(--ink-3);
+    font-variant-numeric: lining-nums;
+  }
+</style>

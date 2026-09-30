@@ -13,18 +13,15 @@
   "dependencies": {
     "@astrojs/mdx": "^7.0.7",
     "@astrojs/rss": "^4.0.19",
-    "@fontsource/dm-serif-display": "^5.2.8",
-    "@fontsource/inter": "^5.2.8",
+    "@fontsource-variable/literata": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/noto-sans-symbols-2": "^5.3.0",
     "astro": "^7.2.4",
     "astro-icon": "^1.2.0",
     "astro-mermaid": "^2.1.0",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^3.4.19"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19"
   },
   "overrides": {
     "esbuild": "^0.28.1"

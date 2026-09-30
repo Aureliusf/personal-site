@@ -1,0 +1,15 @@
+---
+/**
+ * A numbered margin note. Place it inline, right after the words it annotates.
+ * Wide screens float it into the right margin; narrow screens show it under
+ * the paragraph when the number is tapped.
+ */
+interface Props {
+  n: number | string;
+  id?: string;
+}
+
+const { n, id = `note-${n}` } = Astro.props;
+---
+
+<sup class="note-ref"><button type="button" aria-expanded="false" aria-controls={id} aria-label={`Note ${n}`} data-note={id}>{n}</button></sup><span class="sidenote" id={id} role="note"><span class="sidenote-n" aria-hidden="true">{n}</span><slot /></span>
