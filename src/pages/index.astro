@@ -184,21 +184,26 @@ const uniqueTags = Object.entries(tagCounts)
     </aside>
   </div>
 
-  <!-- Personality card pop-out modal -->
-  <div class="card-modal" data-card-modal role="dialog" aria-modal="true" aria-hidden="true" aria-label="Aurelio Florez — personality card">
+  <!-- Personality card pop-out -->
+  <dialog class="card-modal" data-card-modal aria-label="Aurelio Florez, personality card">
     <div class="card-modal-backdrop" data-card-backdrop></div>
-    <div class="card-modal-panel">
-      <PersonalityCard bare>
-        <button
-          slot="actions"
-          data-card-close
-          type="button"
-          aria-label="Close personality card"
-          class="card-close"
-        >✕</button>
-      </PersonalityCard>
+    <div class="card-modal-stage" data-card-stage>
+      <div class="card-fly" data-card-fly>
+        <div class="card-float" data-card-float>
+          <PersonalityCard bare />
+        </div>
+      </div>
+      <div class="card-controls" data-card-controls>
+        <span class="card-hint">
+          <span class="card-hint-pointer">Drag to spin · Esc to close</span>
+          <span class="card-hint-touch">Swipe to spin · Tilt your phone</span>
+        </span>
+        <button data-card-close type="button" class="card-close" autofocus>
+          <span aria-hidden="true">✕</span> Close
+        </button>
+      </div>
     </div>
-  </div>
+  </dialog>
 </BaseLayout>
 
 <style>
@@ -231,153 +236,229 @@ const uniqueTags = Object.entries(tagCounts)
     transform: translateY(0);
   }
 
-  /* Pop-out modal */
+  /* Pop-out dialog: full-viewport, transparent; we draw our own backdrop
+     so it can fade in step with the card's flight. */
   .card-modal {
     position: fixed;
     inset: 0;
-    z-index: 100;
-    display: grid;
-    place-items: center;
-    padding: 2.5rem 1.5rem;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.16s ease, visibility 0.16s;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+    /* Card width: grows with large desktop screens, but always fits
+       narrow phones and short landscape screens */
+    --pc-width: min(max(360px, 26vw), 520px, 84vw, calc((100dvh - 8rem) * 5 / 7));
   }
 
-  .card-modal.open {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+  .card-modal::backdrop {
+    background: transparent;
+  }
+
+  :global(html.card-open) {
+    overflow: hidden;
   }
 
   .card-modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(9, 10, 12, 0.78);
-    backdrop-filter: blur(3px);
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(60, 64, 74, 0.35), transparent 60%),
+      rgba(9, 10, 12, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
-  /* The "pop": scale + slight rotation with an overshooting bezier,
-     plus a focus blur for a fluid depth effect — kept snappy. */
-  .card-modal-panel {
+  .card-modal-stage {
     position: relative;
-    transform: scale(0.86) rotate(-4deg) translateY(12px);
-    filter: blur(5px);
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+    height: 100%;
+    padding: 1.5rem;
   }
 
-  .card-modal.open .card-modal-panel {
-    transform: scale(1) rotate(0deg) translateY(0);
-    filter: blur(0);
-    animation: panelFloat 8s ease-in-out 0.45s infinite;
+  .card-fly {
+    will-change: transform;
   }
 
-  /* Gentle idle float while popped out — the card never sits still */
-  @keyframes panelFloat {
+  /* Gentle idle float once the card has landed */
+  .card-float.is-landed {
+    animation: cardFloat 7s ease-in-out infinite;
+  }
+
+  @keyframes cardFloat {
     0%,
     100% {
-      transform: scale(1) rotate(0deg) translateY(0);
+      transform: translateY(0);
     }
     50% {
-      transform: scale(1) rotate(0deg) translateY(-8px);
+      transform: translateY(-8px);
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .card-modal-panel {
-      transform: none;
-      filter: none;
-      transition: none;
+  .card-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(238, 240, 243, 0.45);
+  }
+
+  .card-hint-pointer {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-hint-pointer {
+      display: inline;
     }
 
-    .card-modal.open .card-modal-panel {
-      animation: none;
+    .card-hint-touch {
+      display: none;
     }
   }
 
-  /* Close ✕ — styled as one of the card's own registration crosses,
-     sitting in the title row of the card. */
   .card-close {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-left: 1rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    line-height: 1;
-    color: rgba(240, 243, 247, 0.45);
-    background: transparent;
-    border: none;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: rgba(238, 240, 243, 0.75);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     cursor: pointer;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
 
-  .card-close:hover {
-    color: var(--accent-pink);
-    text-shadow: 0 0 10px rgba(236, 72, 153, 0.45);
-    transform: rotate(90deg);
-  }
-
+  .card-close:hover,
   .card-close:focus-visible {
-    outline: 1px solid var(--accent-pink);
-    outline-offset: 2px;
+    color: #fff;
+    border-color: var(--accent-pink);
+    background: rgba(236, 72, 153, 0.1);
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-float.is-landed {
+      animation: none;
+    }
+
   }
 </style>
 
 <script>
-  const modal = document.querySelector('[data-card-modal]');
-  const trigger = document.querySelector('[data-card-trigger]');
-  const closeBtn = modal?.querySelector('[data-card-close]');
-  const backdrop = modal?.querySelector('[data-card-backdrop]');
-  let lastFocus: HTMLElement | null = null;
+  const modal = document.querySelector<HTMLDialogElement>('[data-card-modal]');
+  const trigger = document.querySelector<HTMLButtonElement>('[data-card-trigger]');
 
-  const openModal = () => {
-    if (!modal || modal.classList.contains('open')) return;
-    lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden'; // lock page scroll while popped out
-    if (closeBtn instanceof HTMLElement) closeBtn.focus();
-  };
+  if (modal && trigger) {
+    const fly = modal.querySelector<HTMLElement>('[data-card-fly]')!;
+    const float = modal.querySelector<HTMLElement>('[data-card-float]')!;
+    const backdrop = modal.querySelector<HTMLElement>('[data-card-backdrop]')!;
+    const controls = modal.querySelector<HTMLElement>('[data-card-controls]')!;
+    const closeBtn = modal.querySelector<HTMLButtonElement>('[data-card-close]')!;
+    const card = modal.querySelector<HTMLElement>('[data-personality-card]')!;
+    const portrait = card.querySelector<HTMLImageElement>('img')!;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const closeModal = () => {
-    if (!modal || !modal.classList.contains('open')) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    lastFocus?.focus();
-  };
+    // Warm the portrait before the first open so the card never pops in empty.
+    const preload = () => {
+      portrait.loading = 'eager';
+    };
+    ['pointerenter', 'focus', 'touchstart'].forEach((type) =>
+      trigger.addEventListener(type, preload, { once: true, passive: true }),
+    );
+    window.addEventListener('load', () => setTimeout(preload, 1500), { once: true });
 
-  // Clicking the hero chip pops the card out.
-  trigger?.addEventListener('click', openModal);
+    let lastFocus: HTMLElement | null = null;
+    let closing = false;
 
-  closeBtn?.addEventListener('click', closeModal);
-  backdrop?.addEventListener('click', closeModal);
+    const openModal = async () => {
+      if (modal.open) return;
+      lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      preload();
+      await Promise.race([portrait.decode().catch(() => {}), new Promise((r) => setTimeout(r, 150))]);
 
-  document.addEventListener('keydown', (e) => {
-    if (!modal?.classList.contains('open')) return;
-    if (e.key === 'Escape') {
-      closeModal();
-      return;
-    }
-    if (e.key === 'Tab') {
-      // Minimal focus trap inside the dialog
-      const focusables = modal.querySelectorAll<HTMLElement>('a[href], button');
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
+      card.dispatchEvent(new Event('pc:reset'));
+      modal.showModal();
+      document.documentElement.classList.add('card-open');
+      closeBtn.focus({ preventScroll: true });
+
+      if (reduceMotion) {
+        modal.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150 });
+        return;
       }
-    }
-  });
+
+      // A quick, quiet entrance: fade in with a slight lift.
+      const enter = { duration: 200, easing: 'cubic-bezier(0.2, 0, 0, 1)' };
+      backdrop.animate([{ opacity: 0 }, { opacity: 1 }], enter);
+      controls.animate([{ opacity: 0 }, { opacity: 1 }], enter);
+      fly
+        .animate([{ transform: 'translateY(8px) scale(0.97)', opacity: 0 }, { transform: 'none', opacity: 1 }], enter)
+        .finished.then(() => float.classList.add('is-landed'))
+        .catch(() => {});
+    };
+
+    // Runs however the dialog ends up closed.
+    const cleanUp = () => {
+      closing = false;
+      float.classList.remove('is-landed');
+      document.documentElement.classList.remove('card-open');
+      fly.getAnimations().forEach((a) => a.cancel());
+      lastFocus?.focus({ preventScroll: true });
+    };
+
+    const closeModal = async () => {
+      if (!modal.open || closing) return;
+      closing = true;
+
+      if (!reduceMotion) {
+        float.classList.remove('is-landed');
+        const leave = { duration: 150, easing: 'ease-in', fill: 'forwards' as const };
+        backdrop.animate([{ opacity: 1 }, { opacity: 0 }], leave);
+        controls.animate([{ opacity: 1 }, { opacity: 0 }], leave);
+        await fly
+          .animate([{ transform: 'none', opacity: 1 }, { transform: 'scale(0.97)', opacity: 0 }], leave)
+          .finished.catch(() => {});
+      }
+
+      modal.close();
+      [backdrop, controls].forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
+    };
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('close', cleanUp);
+
+    // Esc: play the close animation instead of vanishing.
+    modal.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      closeModal();
+    });
+
+    // Clicks outside the card close it, but not the end of a drag that
+    // started on the card and wandered off.
+    let downOutside = false;
+    modal.addEventListener('pointerdown', (e) => {
+      downOutside = !(e.target as Element).closest('[data-personality-card], [data-card-controls]');
+    });
+    modal.addEventListener('click', (e) => {
+      if (downOutside && !(e.target as Element).closest('[data-personality-card], [data-card-controls]')) {
+        closeModal();
+      }
+      downOutside = false;
+    });
+  }
 </script>
