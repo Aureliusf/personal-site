@@ -1,0 +1,998 @@
+---
+import { profile } from '../data/agent-profile.ts';
+
+interface Props {
+  /** Bare mode: render just the card, without the dark stage box
+   * (used when the card pops out over a backdrop). */
+  bare?: boolean;
+  /** Load the portrait eagerly. The pop-out card preloads it itself. */
+  eager?: boolean;
+}
+
+const { bare = false, eager = false } = Astro.props;
+
+/**
+ * Personality card: a two-sided brushed-metal trading card. The front
+ * carries the portrait, the back is a spec sheet. Click or tap flips it,
+ * dragging spins it with inertia, and the pointer (or phone gyro) tilts
+ * it under a moving light. Facts come from src/data/agent-profile.ts.
+ */
+
+// Optimized copies of Profile.png (800x800) live in static/images/.
+const picture = '/images/profile-fallback.png';
+const pictureWebp = '/images/profile.webp';
+
+const host = new URL(profile.siteUrl).host;
+
+// Card wording, trimmed for the card. The full profile (llms.txt,
+// agent-profile.json) keeps the longer versions.
+const studying = 'BS in Computer Science at FIU';
+const focus = [
+  profile.focus[0],
+  profile.focus[2],
+  profile.focus[3],
+  'End-to-end ownership and agency',
+];
+
+// Short strip under the headline on the front.
+const meta = [
+  { label: 'Based', value: profile.location },
+  { label: 'Speaks', value: profile.languages.join(' / ') },
+];
+
+const facts = [
+  { label: 'Status', value: profile.availability },
+  { label: 'Studying', value: studying },
+];
+
+// A short cross-section of the stack, one or two from each area.
+const toolkit = [
+  ...profile.skills.languages.slice(0, 3),
+  ...profile.skills.aiAndAutomation.slice(0, 2),
+  ...profile.skills.infrastructure.slice(0, 2),
+  profile.skills.backendAndData[0],
+];
+
+const links = [
+  { label: 'Email', href: `mailto:${profile.email}` },
+  { label: 'GitHub', href: profile.links.github, external: true },
+  { label: 'LinkedIn', href: profile.links.linkedin, external: true },
+  { label: 'Resume', href: profile.links.resume },
+];
+---
+
+<div class:list={['pc-stage', bare && 'pc-stage--none']}>
+  <div class="pc-scene" data-pc-scene>
+    <article class="personality-card" data-personality-card aria-label={`${profile.name}, personality card`}>
+      <!-- Front: portrait -->
+      <section class="pc-face pc-face--front" data-pc-face="front">
+        <div class="pc-surface" aria-hidden="true">
+          <span class="pc-triangle">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#b3b8c2" stroke-width="1">
+              <polygon points="50,6 96,92 4,92" />
+            </svg>
+          </span>
+          <span class="pc-light"></span>
+        </div>
+
+        <header class="pc-title-header pc-depth-1">
+          <h2 class="pc-title">{profile.name}</h2>
+          <span class="pc-serial">AI + Ops</span>
+        </header>
+
+        <figure class="pc-picture pc-depth-2">
+          <span class="pc-tick pc-tick--tl" aria-hidden="true"></span>
+          <span class="pc-tick pc-tick--tr" aria-hidden="true"></span>
+          <span class="pc-tick pc-tick--bl" aria-hidden="true"></span>
+          <span class="pc-tick pc-tick--br" aria-hidden="true"></span>
+          <picture>
+            <source srcset={pictureWebp} type="image/webp" />
+            <img
+              src={picture}
+              alt={`Portrait of ${profile.name}`}
+              width="800"
+              height="800"
+              loading={eager ? 'eager' : 'lazy'}
+              decoding="async"
+              draggable="false"
+            />
+          </picture>
+          <span class="pc-picture-glare" aria-hidden="true"></span>
+        </figure>
+
+        <p class="pc-headline pc-depth-1">{profile.headline}</p>
+
+        <dl class="pc-meta pc-depth-1">
+          {meta.map((item) => (
+            <div>
+              <dt class="pc-fact-key">{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <footer class="pc-bottom pc-depth-1">
+          <span class="pc-cross" aria-hidden="true">✕</span>
+          <button type="button" class="pc-flip" data-pc-flip>
+            <span class="pc-flip-touch">Tap to flip</span><span class="pc-flip-pointer">Click to flip</span>
+            <span aria-hidden="true">↻</span>
+          </button>
+          <span class="pc-cross" aria-hidden="true">✕</span>
+        </footer>
+      </section>
+
+      <!-- Back: spec sheet -->
+      <section class="pc-face pc-face--back" data-pc-face="back" inert>
+        <div class="pc-surface" aria-hidden="true">
+          <span class="pc-light"></span>
+        </div>
+
+        <header class="pc-back-header pc-depth-1">
+          <p class="pc-kicker">Spec sheet</p>
+          <p class="pc-back-name">{profile.name}</p>
+        </header>
+
+        <dl class="pc-facts pc-depth-1">
+          {facts.map((fact) => (
+            <div class="pc-fact">
+              <dt class="pc-fact-key">{fact.label}</dt>
+              <dd class="pc-fact-val">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="pc-focus pc-depth-1">
+          <p class="pc-fact-key">Focus</p>
+          <ol>
+            {focus.map((item, i) => (
+              <li><span class="pc-focus-n">{String(i + 1).padStart(2, '0')}</span>{item}</li>
+            ))}
+          </ol>
+        </div>
+
+        <div class="pc-toolkit pc-depth-1">
+          <p class="pc-fact-key">Toolkit</p>
+          <ul>
+            {toolkit.map((tool) => <li>{tool}</li>)}
+          </ul>
+        </div>
+
+        <nav class="pc-links pc-depth-2" aria-label="Contact links">
+          {links.map((link) => (
+            <a
+              href={link.href}
+              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >{link.label}</a>
+          ))}
+        </nav>
+
+        <footer class="pc-bottom pc-bottom--back pc-depth-1">
+          <span class="pc-barcode" aria-hidden="true"></span>
+          <span class="pc-host" aria-hidden="true">{host}</span>
+          <button type="button" class="pc-flip pc-flip--icon" data-pc-flip aria-label="Flip to front">↻</button>
+        </footer>
+      </section>
+    </article>
+  </div>
+</div>
+
+<style>
+  /* Dark stage around the card, like the reference page background. */
+  .pc-stage {
+    position: relative;
+    padding: 2.5rem 1.5rem;
+    background: #090a0c;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .pc-stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.045) 0.5px, transparent 0.6px);
+    background-size: 18px 18px;
+    pointer-events: none;
+  }
+
+  /* Bare mode (pop-out): the card floats on its own over a backdrop. */
+  .pc-stage--none {
+    display: contents;
+  }
+
+  .pc-stage--none::before {
+    content: none;
+  }
+
+  /* The scene sets the card size and perspective. It is also the size
+     container, so everything on the card scales with its width like a
+     real printed object. */
+  .pc-scene {
+    position: relative;
+    width: var(--pc-width, min(100%, 360px));
+    margin: 0 auto;
+    perspective: 1100px;
+    container-type: inline-size;
+    touch-action: pan-y; /* horizontal drags spin the card, vertical still scrolls */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .personality-card {
+    position: relative;
+    aspect-ratio: 5 / 7;
+    font-size: 4.2cqi;
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: grab;
+  }
+
+  .personality-card.is-dragging {
+    cursor: grabbing;
+  }
+
+  /* Each face is a full brushed-metal plate. */
+  .pc-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.1em 1.25em 0.9em;
+    border-radius: 0.55em;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background:
+      /* Diagonal sheen bands, shifted by the spin so the metal catches light */
+      linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0.085) 0%,
+        rgba(255, 255, 255, 0.02) 26%,
+        rgba(255, 255, 255, 0) 46%,
+        rgba(255, 255, 255, 0.025) 66%,
+        rgba(255, 255, 255, 0.075) 100%
+      ) var(--sheen, 0%) 0 / 220% 100%,
+      /* Fine brushed-grain lines */
+      repeating-linear-gradient(
+        92deg,
+        rgba(255, 255, 255, 0.03) 0 1px,
+        rgba(255, 255, 255, 0) 1px 3px
+      ),
+      /* Metal base: polished graphite with ridges */
+      linear-gradient(
+        170deg,
+        #2b2e35 0%,
+        #1b1d23 16%,
+        #14161b 40%,
+        #1a1c22 58%,
+        #101216 78%,
+        #191b21 100%
+      );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+      0 24px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .pc-face--back {
+    transform: rotateY(180deg);
+  }
+
+  .pc-stage--none .pc-face {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.55),
+      0 18px 40px rgba(0, 0, 0, 0.5),
+      0 48px 110px rgba(0, 0, 0, 0.75);
+  }
+
+  /* Rim light: a thin edge that brightens on the side facing the light. */
+  .pc-face::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--rim, 135deg),
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.1) 20%,
+      rgba(255, 255, 255, 0.06) 50%,
+      rgba(255, 255, 255, 0.1) 80%,
+      rgba(255, 255, 255, 0.55)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
+  /* Flat decoration layer: microdots, corner mark, and the moving light.
+     Clipping lives here so the content above can keep its 3D depth. */
+  .pc-surface {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0.5px, transparent 0.6px);
+    background-size: 12px 12px;
+  }
+
+  .pc-light {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 30%),
+      rgba(228, 235, 245, 0.2),
+      rgba(228, 235, 245, 0.055) 32%,
+      transparent 62%
+    );
+    opacity: calc(0.25 + var(--light, 0) * 0.75);
+  }
+
+  .pc-triangle {
+    position: absolute;
+    right: -1.4rem;
+    bottom: -1.4rem;
+    width: 84px;
+    height: 84px;
+    opacity: 0.22;
+  }
+
+  .pc-triangle svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Depth layers: content floats above the plate for a little parallax. */
+  .pc-depth-1,
+  .pc-depth-2 {
+    position: relative;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* --depth drops to 0 as the card turns edge-on, so the layers never
+     poke out past the plate mid-flip. */
+  .pc-depth-1 {
+    transform: translateZ(calc(var(--depth, 1) * 8px));
+  }
+
+  .pc-depth-2 {
+    transform: translateZ(calc(var(--depth, 1) * 18px));
+  }
+
+  /* Card title: the name, engraved into the metal at the top. */
+  .pc-title-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 0.85em;
+  }
+
+  .pc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05em;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f3f5f8;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.14);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .pc-serial {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55em;
+    letter-spacing: 0.18em;
+    color: rgba(238, 240, 243, 0.35);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Picture with registration-tick framing marks. */
+  .pc-picture {
+    margin: 0;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.42),
+          rgba(255, 255, 255, 0.08) 38%,
+          rgba(0, 0, 0, 0.5) 72%,
+          rgba(255, 255, 255, 0.28)
+        )
+        border-box;
+  }
+
+  .pc-picture img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 0.9;
+    /* Show the whole cutout (it has a transparent background), resting on
+       the frame's bottom edge so the hair keeps its headroom. */
+    object-fit: contain;
+    object-position: 50% 100%;
+    padding-top: 4%;
+    box-sizing: border-box;
+    /* The face sits about 1% left of centre in the source image. */
+    translate: 0.9% 0;
+    filter: drop-shadow(0 0.5em 0.6em rgba(0, 0, 0, 0.45));
+    -webkit-user-drag: none;
+  }
+
+  .pc-picture-glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 30%),
+      rgba(255, 255, 255, 0.28),
+      transparent 55%
+    );
+    mix-blend-mode: soft-light;
+    opacity: var(--light, 0);
+  }
+
+  .pc-tick {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .pc-tick--tl {
+    top: -4px;
+    left: -4px;
+    border-top: 1px solid rgba(238, 240, 243, 0.45);
+    border-left: 1px solid rgba(238, 240, 243, 0.45);
+  }
+
+  .pc-tick--tr {
+    top: -4px;
+    right: -4px;
+    border-top: 1px solid rgba(238, 240, 243, 0.45);
+    border-right: 1px solid rgba(238, 240, 243, 0.45);
+  }
+
+  .pc-tick--bl {
+    bottom: -4px;
+    left: -4px;
+    border-bottom: 1px solid rgba(238, 240, 243, 0.45);
+    border-left: 1px solid rgba(238, 240, 243, 0.45);
+  }
+
+  .pc-tick--br {
+    bottom: -4px;
+    right: -4px;
+    border-bottom: 1px solid rgba(238, 240, 243, 0.45);
+    border-right: 1px solid rgba(238, 240, 243, 0.45);
+  }
+
+  .pc-headline {
+    font-size: 0.72em;
+    line-height: 1.55;
+    color: rgba(238, 240, 243, 0.6);
+    margin: 0.9em 0 0;
+  }
+
+  .pc-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75em;
+    margin: 0.8em 0 0;
+    padding-top: 0.7em;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .pc-meta dd {
+    margin: 0.3em 0 0;
+    font-size: 0.7em;
+    color: rgba(238, 240, 243, 0.85);
+  }
+
+  .pc-bottom {
+    padding-top: 0.6em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+    margin-top: auto;
+  }
+
+  .pc-bottom--back {
+    margin-top: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pc-cross {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6em;
+    color: rgba(238, 240, 243, 0.4);
+  }
+
+  /* The hint doubles as the flip control for keyboard and screen readers. */
+  .pc-flip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.35em 0.6em;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58em;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.4);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .pc-flip:hover,
+  .pc-flip:focus-visible {
+    color: var(--accent-pink, #ec4899);
+  }
+
+  .pc-flip:focus-visible {
+    outline: 1px solid var(--accent-pink, #ec4899);
+    outline-offset: 2px;
+  }
+
+  .pc-flip--icon {
+    font-size: 0.9em;
+    letter-spacing: 0;
+    padding: 0.1em 0.3em;
+  }
+
+  .pc-flip-pointer {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pc-flip-touch {
+      display: none;
+    }
+
+    .pc-flip-pointer {
+      display: inline;
+    }
+  }
+
+  /* Back face: spec sheet */
+  .pc-back-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.7em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .pc-kicker {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05em;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f3f5f8;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .pc-back-name {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55em;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(238, 240, 243, 0.35);
+  }
+
+  .pc-facts {
+    margin: 0;
+  }
+
+  .pc-fact {
+    display: grid;
+    grid-template-columns: 5.2em 1fr;
+    gap: 0.75em;
+    align-items: baseline;
+    padding: 0.5em 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pc-fact-key {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56em;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(238, 240, 243, 0.38);
+  }
+
+  .pc-fact-val {
+    font-size: 0.7em;
+    line-height: 1.5;
+    color: rgba(238, 240, 243, 0.85);
+    margin: 0;
+  }
+
+  .pc-focus {
+    padding-top: 1.2em;
+  }
+
+  .pc-focus ol {
+    list-style: none;
+    margin: 0.6em 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6em;
+  }
+
+  .pc-focus li {
+    display: flex;
+    gap: 0.9em;
+    font-size: 0.68em;
+    line-height: 1.4;
+    color: rgba(238, 240, 243, 0.78);
+  }
+
+  .pc-focus-n {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-pink, #ec4899);
+    opacity: 0.85;
+  }
+
+  .pc-toolkit {
+    padding-top: 1.4em;
+  }
+
+  .pc-toolkit ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    margin: 0.55em 0 0;
+    padding: 0;
+  }
+
+  .pc-toolkit li {
+    padding: 0.2em 0.55em;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56em;
+    letter-spacing: 0.04em;
+    color: rgba(238, 240, 243, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.3em;
+  }
+
+  .pc-links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.45em;
+    margin-top: auto;
+    margin-bottom: 0.9em;
+  }
+
+  .pc-links a {
+    display: block;
+    padding: 0.55em 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.52em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(238, 240, 243, 0.8);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0.35em;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .pc-links a:hover,
+  .pc-links a:focus-visible {
+    color: #fff;
+    border-color: var(--accent-pink, #ec4899);
+    background: linear-gradient(180deg, rgba(236, 72, 153, 0.16), rgba(236, 72, 153, 0.04));
+    outline: none;
+  }
+
+  /* Decorative barcode, like the fine print on the back of a card. */
+  .pc-barcode {
+    width: 5.5em;
+    height: 1.4em;
+    opacity: 0.4;
+    background: repeating-linear-gradient(
+      90deg,
+      #e6e8ec 0 1px,
+      transparent 1px 3px,
+      #e6e8ec 3px 5px,
+      transparent 5px 6px,
+      #e6e8ec 6px 7px,
+      transparent 7px 10px
+    );
+  }
+
+  .pc-host {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.52em;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(238, 240, 243, 0.35);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .personality-card {
+      cursor: default;
+    }
+  }
+</style>
+
+<script>
+  // Card physics. Tilt eases toward the pointer (desktop) or the phone's
+  // orientation (gyro). Spin is a damped spring that rests on a face;
+  // dragging drives it directly and release throws it with momentum.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const DOE = window.DeviceOrientationEvent as unknown as
+    | { requestPermission?: () => Promise<'granted' | 'denied'> }
+    | undefined;
+  const supportsOrientation = typeof DOE !== 'undefined' && 'ondeviceorientation' in window;
+
+  document.querySelectorAll<HTMLElement>('[data-pc-scene]').forEach((scene) => {
+    const card = scene.querySelector<HTMLElement>('[data-personality-card]')!;
+    const front = card.querySelector<HTMLElement>('[data-pc-face="front"]')!;
+    const back = card.querySelector<HTMLElement>('[data-pc-face="back"]')!;
+
+    const MAX_TILT = 9; // degrees
+    const STIFFNESS = 210;
+    const DAMPING = 2 * Math.sqrt(STIFFNESS) * 0.6; // slightly underdamped: a small settle wobble
+
+    let tiltX = 0, tiltY = 0, targetX = 0, targetY = 0;
+    let light = 0, targetLight = 0;
+    let spin = 0, spinVel = 0, restSpin = 0;
+    let showingBack = false;
+    let raf = 0;
+    let last = 0;
+
+    const setFace = (backVisible: boolean) => {
+      if (backVisible === showingBack) return;
+      showingBack = backVisible;
+      front.inert = backVisible;
+      back.inert = !backVisible;
+      card.dataset.face = backVisible ? 'back' : 'front';
+    };
+
+    const render = () => {
+      card.style.transform = `rotateX(${tiltX.toFixed(3)}deg) rotateY(${(spin + tiltY).toFixed(3)}deg)`;
+      card.style.setProperty('--light', light.toFixed(3));
+      // The sheen bands slide and the rim light swings as the card turns.
+      const turn = (((spin + tiltY) % 360) + 360) % 360;
+      card.style.setProperty('--sheen', `${((turn / 360) * 100).toFixed(2)}%`);
+      card.style.setProperty('--rim', `${(135 + tiltY * 6 - tiltX * 6).toFixed(1)}deg`);
+      card.style.setProperty('--depth', Math.abs(Math.cos(((spin + tiltY) * Math.PI) / 180)).toFixed(3));
+      const facing = (((spin % 360) + 360) % 360);
+      setFace(facing > 90 && facing < 270);
+    };
+
+    const frame = (now: number) => {
+      const dt = Math.min(0.034, (now - (last || now)) / 1000 || 0.016);
+      last = now;
+      const ease = 1 - Math.exp(-dt * 11);
+      tiltX += (targetX - tiltX) * ease;
+      tiltY += (targetY - tiltY) * ease;
+      light += (targetLight - light) * ease;
+
+      if (!dragging) {
+        const accel = STIFFNESS * (restSpin - spin) - DAMPING * spinVel;
+        spinVel += accel * dt;
+        spin += spinVel * dt;
+      }
+
+      render();
+
+      const settled =
+        !dragging &&
+        Math.abs(targetX - tiltX) < 0.02 &&
+        Math.abs(targetY - tiltY) < 0.02 &&
+        Math.abs(targetLight - light) < 0.005 &&
+        Math.abs(restSpin - spin) < 0.05 &&
+        Math.abs(spinVel) < 0.05;
+
+      if (settled) {
+        spin = restSpin;
+        spinVel = 0;
+        render();
+        raf = 0;
+        last = 0;
+      } else {
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    const start = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+
+    // nx/ny in [-1, 1]: direction of the tilt. engaged: input is active.
+    const setTilt = (nx: number, ny: number, engaged: boolean) => {
+      if (reduceMotion) return;
+      targetX = ny * MAX_TILT;
+      targetY = nx * MAX_TILT;
+      targetLight = engaged ? 1 : 0;
+      card.style.setProperty('--mx', `${(50 + nx * 40).toFixed(2)}%`);
+      card.style.setProperty('--my', `${(50 - ny * 40).toFixed(2)}%`);
+      start();
+    };
+
+    const flip = (direction = 1) => {
+      restSpin = Math.round(restSpin / 180) * 180 + 180 * direction;
+      if (reduceMotion) {
+        spin = restSpin;
+        render();
+        return;
+      }
+      spinVel += 90 * direction; // a little extra snap off the finger
+      start();
+    };
+
+    // Put the card back on its front, instantly (used when a modal reopens).
+    card.addEventListener('pc:reset', () => {
+      restSpin = spin = spinVel = 0;
+      tiltX = tiltY = targetX = targetY = light = targetLight = 0;
+      render();
+    });
+
+    // Flip buttons: keep keyboard focus on the face that turns up.
+    card.querySelectorAll<HTMLButtonElement>('[data-pc-flip]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasBack = showingBack;
+        flip(wasBack ? -1 : 1);
+        if (e.detail === 0) {
+          // Keyboard activation: move focus once the other face is live.
+          const target = (wasBack ? front : back).querySelector<HTMLElement>('[data-pc-flip]');
+          requestAnimationFrame(() => target?.focus({ preventScroll: true }));
+        }
+      });
+    });
+
+    // --- Pointer: hover tilt, click to flip, drag to spin ---
+    let dragging = false;
+    let downX = 0, downY = 0, downSpin = 0, downId = -1;
+    let lastX = 0, lastT = 0, dragVel = 0;
+    const DRAG_THRESHOLD = 6;
+
+    const isControl = (el: EventTarget | null) =>
+      el instanceof Element && !!el.closest('a, button');
+
+    card.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || isControl(e.target)) return;
+      // Mouse: stop a text selection from starting and bleeding into the page.
+      // Touch keeps its default so vertical page scroll still works.
+      if (e.pointerType === 'mouse') e.preventDefault();
+      downId = e.pointerId;
+      downX = lastX = e.clientX;
+      downY = e.clientY;
+      downSpin = spin;
+      lastT = e.timeStamp;
+      dragVel = 0;
+    });
+
+    card.addEventListener('pointermove', (e) => {
+      if (e.pointerId === downId) {
+        const dx = e.clientX - downX;
+        const dy = e.clientY - downY;
+        if (!dragging && Math.abs(dx) > DRAG_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+          dragging = true;
+          card.classList.add('is-dragging');
+          try {
+            card.setPointerCapture(e.pointerId);
+          } catch {
+            /* pointer already gone; the drag still tracks via pointermove */
+          }
+        }
+        if (dragging && !reduceMotion) {
+          const degPerPx = 180 / (card.offsetWidth * 0.9);
+          spin = downSpin + dx * degPerPx;
+          const dtMs = Math.max(1, e.timeStamp - lastT);
+          const inst = ((e.clientX - lastX) * degPerPx * 1000) / dtMs;
+          dragVel = dragVel * 0.6 + inst * 0.4;
+          lastX = e.clientX;
+          lastT = e.timeStamp;
+          start();
+        }
+      }
+
+      if (e.pointerType === 'touch') return; // touch tilt comes from the gyro
+      const rect = card.getBoundingClientRect();
+      const px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      const py = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+      setTilt(px - 0.5, 0.5 - py, true);
+    });
+
+    const release = (e: PointerEvent) => {
+      if (e.pointerId !== downId) return;
+      downId = -1;
+      if (dragging) {
+        dragging = false;
+        card.classList.remove('is-dragging');
+        // Throw: project the spin forward by its momentum, rest on a face.
+        const projected = spin + dragVel * 0.18;
+        restSpin = Math.round(projected / 180) * 180;
+        spinVel = dragVel;
+        start();
+      } else if (e.type === 'pointerup' && !isControl(e.target)) {
+        // Plain click or tap: flip, turning away from the side that was hit.
+        const rect = card.getBoundingClientRect();
+        flip(e.clientX > rect.left + rect.width / 2 ? -1 : 1);
+      }
+    };
+
+    card.addEventListener('pointerup', release);
+    card.addEventListener('pointercancel', release);
+    card.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'touch' && !dragging) setTilt(0, 0, false);
+    });
+
+    // --- Phones: device orientation, only while the card is on screen ---
+    if (!supportsOrientation || reduceMotion) return;
+
+    const RANGE = 30; // degrees of phone tilt mapped to full card tilt
+    let baseBeta: number | null = null; // how the phone was held when the card appeared
+
+    const onOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta == null || e.gamma == null) return;
+      const angle = screen.orientation?.angle ?? 0;
+      let b = e.beta;
+      let g = e.gamma;
+      if (angle === 90) [b, g] = [e.gamma, -e.beta];
+      else if (angle === 270 || angle === -90) [b, g] = [-e.gamma, e.beta];
+      else if (angle === 180) [b, g] = [-e.beta, -e.gamma];
+
+      // People hold phones at an angle; tilt relative to that pose.
+      if (baseBeta === null) baseBeta = b;
+      baseBeta += (b - baseBeta) * 0.01; // slowly re-centre
+      const db = b - baseBeta;
+
+      const clamp = (v: number) => Math.max(-RANGE, Math.min(RANGE, v)) / RANGE;
+      const engaged = Math.max(Math.abs(db), Math.abs(g)) > 2;
+      setTilt(clamp(g), clamp(-db), engaged);
+    };
+
+    let listening = false;
+    const listen = (on: boolean) => {
+      if (on === listening) return;
+      listening = on;
+      if (on) {
+        baseBeta = null;
+        window.addEventListener('deviceorientation', onOrientation);
+      } else {
+        window.removeEventListener('deviceorientation', onOrientation);
+        setTilt(0, 0, false);
+      }
+    };
+
+    new IntersectionObserver(([entry]) => listen(entry.isIntersecting)).observe(card);
+
+    // iOS 13+: motion access must be requested from a user gesture.
+    if (typeof DOE?.requestPermission === 'function') {
+      card.addEventListener(
+        'touchend',
+        () => {
+          DOE.requestPermission?.().catch(() => {
+            /* denied or unavailable: tilt stays off, flipping still works */
+          });
+        },
+        { once: true },
+      );
+    }
+  });
+</script>
