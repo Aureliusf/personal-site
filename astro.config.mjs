@@ -1,10 +1,12 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import mermaid from 'astro-mermaid';
+import resume from './scripts/resume/integration.mjs';
 
 export default defineConfig({
   site: 'https://aurelioflorez.com',
   integrations: [
+    resume(),
     mdx(),
     mermaid(),
   ],

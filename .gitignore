@@ -1,6 +1,8 @@
 # build output
 dist/
 public/
+# private ResumeQuiver exports
+/resume/
 # generated types
 .astro/
 
