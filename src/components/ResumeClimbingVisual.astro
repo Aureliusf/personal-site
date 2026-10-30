@@ -1,0 +1,136 @@
+---
+type Props = { kind: 'landscape' | 'workflow' | 'results' };
+const { kind } = Astro.props;
+const results = [
+  { name: 'Baseline', score: 77.1, detail: 'Keep the current resume', keep: true },
+  { name: 'Candidate v3', score: 74.3, detail: 'More database evidence; lost debugging evidence', keep: false },
+  { name: 'Candidate v2', score: 73.6, detail: 'More database evidence; lost integration evidence', keep: false },
+];
+---
+
+{kind === 'landscape' && (
+  <figure id="hill-climbing-explained" class="climb-figure not-prose">
+    <div class="figure-top"><span class="eyebrow">01 / The idea</span><span class="figure-type">Conceptual illustration</span></div>
+    <h3>Keep a better candidate. Search from there.</h3>
+    <div class="axis-label">↑ Quality according to the evaluator</div>
+    <svg class="landscape" viewBox="0 0 680 250" role="img" aria-labelledby="hill-title hill-desc">
+      <title id="hill-title">Hill climbing over a candidate landscape</title>
+      <desc id="hill-desc">A search starts at A, accepts B higher on the same hill, and reaches C, a local peak. A worse neighboring candidate is rejected. A higher peak exists beyond a valley, showing why local search does not guarantee the global best.</desc>
+      <path class="gridline" d="M20 220H660 M20 145H660 M20 70H660" />
+      <path class="terrain-fill" d="M20 220 Q65 225 105 188 Q150 152 195 111 Q235 73 275 71 Q320 73 358 145 Q400 222 440 196 Q485 175 520 95 Q565 -4 610 30 Q642 55 660 80 V240H20Z" />
+      <path class="terrain" d="M20 220 Q65 225 105 188 Q150 152 195 111 Q235 73 275 71 Q320 73 358 145 Q400 222 440 196 Q485 175 520 95 Q565 -4 610 30 Q642 55 660 80" />
+      <path class="climb-path" d="M105 188L195 111L275 71" />
+      <path class="rejected-path" d="M195 111L177 168" />
+      <path class="reject-mark" d="M170 161L184 175M184 161L170 175" />
+      <g class="point"><circle cx="105" cy="188" r="16"/><text x="105" y="194">A</text></g>
+      <g class="point"><circle cx="195" cy="111" r="16"/><text x="195" y="117">B</text></g>
+      <g class="point final"><circle cx="275" cy="71" r="16"/><text x="275" y="77">C</text></g>
+      <path class="peak-callout" d="M588 28V10H470" />
+    </svg>
+    <div class="landscape-labels"><span>Nearby candidates →</span><span>Higher peak ≠ discovered peak</span></div>
+    <div class="legend">
+      <div><b>A</b><span>Start with a candidate.</span></div>
+      <div><b>B</b><span>Evaluate a change. Keep it if it improves.</span></div>
+      <div><b>C</b><span>Stop when tested neighbors do not improve, or the budget runs out.</span></div>
+    </div>
+    <figcaption>The hill is a metaphor, not measured resume data. Local search can get stuck: reaching a higher peak may require a different starting point or search strategy.</figcaption>
+  </figure>
+)}
+
+{kind === 'workflow' && (
+  <figure id="resume-optimization-loop" class="climb-figure not-prose">
+    <div class="figure-top"><span class="eyebrow">02 / My application</span><span class="figure-type">Facts stay fixed. Presentation changes.</span></div>
+    <h3>One posting. Multiple ways to tell the truth.</h3>
+    <div class="inputs">
+      <div><span class="step-tag">Source of truth</span><strong>My actual experience</strong><small>Projects, responsibilities, outcomes</small></div>
+      <span class="input-plus" aria-hidden="true">+</span>
+      <div><span class="step-tag">Fixed target</span><strong>This job posting</strong><small>Requirements and evidence expectations</small></div>
+    </div>
+    <div class="connector" aria-hidden="true">↓</div>
+    <ol class="workflow">
+      <li><span class="step-number">1</span><div><strong>Propose</strong><span>Select evidence and rewrite bullets for relevance and clarity. Do not add facts.</span></div></li>
+      <li><span class="step-number">2</span><div><strong>Render</strong><span>Generate the PDF. Reject candidates that break the one-page constraint.</span></div></li>
+      <li><span class="step-number">3</span><div><strong>Evaluate</strong><span>Blind graders assess the visible document against the same posting fixture.</span></div></li>
+      <li><span class="step-number">4</span><div><strong>Compare</strong><span>Code calculates scores and flags evidence gained or lost.</span></div></li>
+    </ol>
+    <div class="decision"><span class="decision-dot" aria-hidden="true"></span><strong>Keep a better version. Otherwise keep the incumbent.</strong></div>
+    <div class="loopback"><span aria-hidden="true">↳</span> Feed the requirement-level feedback into the next proposal. <span aria-hidden="true">↺</span></div>
+    <div class="boundary"><strong>Allowed:</strong> rewrite, condense, emphasize, select.<br/><strong>Not allowed:</strong> invent metrics, experience, ownership, or outcomes.</div>
+    <figcaption>The workflow can improve how I express my experience, not change what happened. The recorded candidate comparisons below tested selection changes.</figcaption>
+  </figure>
+)}
+
+{kind === 'results' && (
+  <figure id="resume-candidate-results" class="climb-figure not-prose">
+    <div class="figure-top"><span class="eyebrow">03 / A real comparison</span><span class="figure-type">Asymptote new-grad posting</span></div>
+    <h3>Two proposals. Neither beat the baseline.</h3>
+    <div class="results">
+      {results.map((r) => (
+        <div class:list={['result-row', { retained: r.keep }]}>
+          <div class="result-heading"><strong>{r.name}</strong><span>{r.score.toFixed(1)} <small>/ 100</small></span></div>
+          <div class="track"><div class="bar" style={`width:${r.score}%`}></div></div>
+          <div class="result-detail"><span>{r.detail}</span><b>{r.keep ? 'RETAINED' : 'REJECTED'}</b></div>
+        </div>
+      ))}
+    </div>
+    <figcaption>Recorded internal rubric scores, on a 0–100 scale. All three fit one page. Panel confidence was low. These are not ATS scores, callback probabilities, or proof that the baseline is optimal.</figcaption>
+  </figure>
+)}
+
+<style>
+  .climb-figure { --ink: var(--text-primary); --subtle: var(--text-secondary); --line: var(--border-strong); --green: #3f6212; --purple: #7e3d69; margin: 2rem 0; padding: clamp(1rem, 3vw, 1.75rem); border: 1px solid var(--border-strong); color: var(--ink); background: var(--bg-secondary); }
+  :global([data-theme="dark"]) .climb-figure { --green: #b8bb26; --purple: #d3869b; }
+  .figure-top { display:flex; flex-wrap:wrap; gap:.4rem 1rem; justify-content:space-between; align-items:baseline; margin-bottom:.85rem; }
+  .eyebrow { color:var(--purple); font:600 .68rem/1.5 'JetBrains Mono',monospace; letter-spacing:.08em; text-transform:uppercase; }
+  .figure-type { color:var(--subtle); font-size:.7rem; }
+  .climb-figure h3 { margin:0 0 1.3rem; color:var(--ink); font-size:clamp(1.15rem,3vw,1.45rem); line-height:1.3; letter-spacing:-.025em; }
+  .axis-label { font-size:.7rem; color:var(--subtle); }
+  .landscape { display:block; width:100%; height:auto; overflow:visible; margin:.6rem 0 .4rem; }
+  .gridline { stroke:var(--line); opacity:.4; fill:none; stroke-dasharray:3 6; }
+  .terrain-fill { fill:var(--bg-tertiary); opacity:.55; }
+  .terrain { fill:none; stroke:var(--line); stroke-width:2; }
+  .climb-path { fill:none; stroke:var(--green); stroke-width:5; }
+  .rejected-path { stroke:var(--purple); stroke-width:2; stroke-dasharray:4 5; fill:none; }
+  .reject-mark { stroke:var(--purple); stroke-width:3; }
+  .point circle { fill:var(--bg-primary); stroke:var(--green); stroke-width:3; }
+  .point text { fill:var(--green); text-anchor:middle; font:700 17px 'JetBrains Mono',monospace; }
+  .point.final circle { fill:var(--green); }
+  .point.final text { fill:var(--bg-primary); }
+  .peak-callout { fill:none; stroke:var(--line); stroke-dasharray:3 4; }
+  .landscape-labels { display:flex; justify-content:space-between; gap:1rem; color:var(--subtle); font-size:.68rem; }
+  .legend { display:grid; grid-template-columns:1fr 1.4fr 1.7fr; gap:1rem; margin-top:1.4rem; padding-top:1rem; border-top:1px solid var(--line); }
+  .legend div { display:flex; gap:.5rem; align-items:baseline; font-size:.8rem; line-height:1.5; }
+  .legend b { color:var(--green); font-family:'JetBrains Mono',monospace; }
+  .climb-figure figcaption { margin:1.25rem 0 0; font-size:.75rem; line-height:1.6; color:var(--subtle); }
+  .inputs { display:grid; grid-template-columns:1fr auto 1fr; gap:1rem; align-items:center; }
+  .inputs>div { padding:1rem; border:1px solid var(--line); background:var(--bg-primary); }
+  .step-tag { display:block; font: .63rem/1.5 'JetBrains Mono',monospace; color:var(--purple); margin-bottom:.45rem; text-transform:uppercase; letter-spacing:.04em; }
+  .inputs strong { display:block; font-size:.9rem; }
+  .inputs small { display:block; margin-top:.4rem; color:var(--subtle); font-size:.75rem; line-height:1.45; }
+  .input-plus { font-size:1.5rem; color:var(--purple); }
+  .connector { text-align:center; color:var(--purple); font-size:1.6rem; margin:.2rem; }
+  .workflow { display:grid; grid-template-columns:1fr 1fr; gap:1px; padding:0; margin:0; list-style:none; border:1px solid var(--line); background:var(--line); }
+  .workflow li { display:flex; gap:.8rem; padding:1.1rem; margin:0; background:var(--bg-secondary); }
+  .step-number { font: .8rem/1.5 'JetBrains Mono',monospace; color:var(--purple); }
+  .workflow strong { display:block; font-size:.95rem; margin-bottom:.35rem; }
+  .workflow li div>span { display:block; font-size:.8rem; line-height:1.6; color:var(--subtle); }
+  .decision { display:flex; align-items:center; gap:.7rem; border:1px solid var(--green); padding:1rem; margin-top:1rem; color:var(--green); font-size:.85rem; }
+  .decision strong { color:inherit; }
+  .decision-dot { width:.5rem; height:.5rem; border-radius:50%; background:var(--green); flex:none; }
+  .loopback { display:flex; align-items:baseline; gap:.6rem; margin-top:.7rem; font-size:.78rem; line-height:1.5; }
+  .loopback>span { color:var(--green); font-size:1.3rem; }
+  .boundary { padding-top:1rem; border-top:1px solid var(--line); margin-top:1.2rem; font-size:.78rem; line-height:1.8; color:var(--subtle); }
+  .boundary strong { color:var(--ink); }
+  .results { display:grid; gap:1.35rem; }
+  .result-heading { display:flex; justify-content:space-between; gap:1rem; align-items:baseline; margin-bottom:.5rem; }
+  .result-heading strong { font-size:.85rem; }
+  .result-heading>span { font:500 1.35rem/1.3 'JetBrains Mono',monospace; }
+  .result-heading small { font-size:.65rem; color:var(--subtle); }
+  .track { width:100%; height:8px; background:var(--bg-tertiary); }
+  .bar { height:100%; background:var(--purple); }
+  .retained .bar { background:var(--green); }
+  .result-detail { display:flex; justify-content:space-between; gap:.7rem; margin-top:.5rem; font-size:.7rem; line-height:1.5; color:var(--subtle); }
+  .result-detail b { font:.6rem/1.8 'JetBrains Mono',monospace; color:var(--purple); white-space:nowrap; }
+  .retained .result-detail b { color:var(--green); }
+  @media(max-width:540px) { .legend { grid-template-columns:1fr; gap:.6rem; } .inputs { grid-template-columns:1fr; gap:.5rem; } .input-plus { text-align:center; font-size:1rem; } .workflow { grid-template-columns:1fr; } .figure-type { font-size:.65rem; } .landscape-labels { font-size:.6rem; } .result-detail { flex-wrap:wrap; } }
+</style>

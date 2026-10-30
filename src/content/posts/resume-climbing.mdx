@@ -1,0 +1,83 @@
+---
+title: "Hill-climbing my resume against a job posting"
+description: "Using AI evaluation and a custom hill-climbing harness to tailor a resume: change the presentation, preserve the facts, and evaluate each candidate against the same job posting."
+date: 2026-10-29T12:00:00-04:00
+tags: ["AI-Agents", "Evaluations", "TypeScript"]
+featured: false
+---
+
+import ResumeClimbingVisual from '../../components/ResumeClimbingVisual.astro';
+
+I used hill climbing and AI evaluation to tailor my resume to a specific job posting.
+
+I already had my experience in YAML and a renderer that turned it into a PDF. What I wanted was a way to iterate: try a different emphasis, rewrite a bullet, bring in a more relevant project, and check whether the resulting document made a stronger case for that role.
+
+The agent is allowed to change the wording. It is not allowed to change the facts. It can make a real accomplishment clearer; it cannot give me an accomplishment I never had.
+
+## What hill climbing means here
+
+Hill climbing starts with a candidate solution, tries nearby changes, and keeps a change when the evaluation says it is better. The accepted candidate becomes the starting point for the next attempt.
+
+For a resume, a neighbor might be a different selection of projects or a rewritten bullet. For another AI workflow, it could be a revised prompt, a different tool strategy, or a change to generated code. You need a way to propose changes and a consistent way to compare the results.
+
+<ResumeClimbingVisual kind="landscape" />
+
+This matters because an agent can produce plenty of plausible alternatives without knowing which one to keep. An evaluation gives the search a direction. Instead of "try again, but better," the next attempt can respond to a specific result.
+
+There is no model training involved in my workflow. The search happens over resume drafts at inference time. Nor does hill climbing guarantee the best possible answer. It can get stuck at a local peak, and it will happily optimize the wrong thing if the evaluator rewards the wrong thing.
+
+## Applying it to my resume
+
+I wanted the target to be the document I would submit, judged against this particular posting. Not my general qualifications, and not everything an agent knew about me from previous conversations.
+
+That gave the workflow two inputs: my actual experience and the job posting. The agent can select, condense, emphasize, and rewrite the experience to address the role. New metrics, invented responsibilities, or stronger claims of ownership are not valid ways to improve a score.
+
+<ResumeClimbingVisual kind="workflow" />
+
+I split the work into three skills:
+
+- **Posting intake** captures the posting and freezes its requirements into a fixture. The target should not change every time I score another draft.
+- **Posting fitness** evaluates the visible resume against that fixture. It does not get the unused experience or the optimizer's pitch for why its latest version is brilliant.
+- **Resume optimizer** sees the source material and the evaluation feedback, then proposes the next candidate.
+
+The separation is useful for rewriting too. The optimizer needs the underlying facts to write accurately. The evaluator should assess the evidence the rewritten document actually communicates, not fill in missing details from the source material.
+
+I built the workflow with Pi, skills, and JavaScript helpers. In the recorded experiments, the candidate changes were selection swaps. Rewriting is permitted within the factual boundary, but those results are not a separate benchmark of rewritten bullets.
+
+## Building the evaluation around the task
+
+A general "rate this resume" prompt would give me a number, but not much to search with. I wanted judgments per requirement: what evidence is present, how directly it supports the requirement, and what is missing.
+
+Models handle that reading. Code validates the judgment rows, applies the weights, and computes the total. I moved the arithmetic into code after the first tests showed models reporting totals that did not match their own evidence rows.
+
+Page fit is also measured rather than guessed. A bullet count turned out to be a bad proxy: one document with nine selected bullets took two pages, while another with eleven fit on one. The workflow renders the actual PDF and checks its page count.
+
+For the judgment step, I asked for a panel using DeepSeek, GPT, and Kimi. Each receives the same packet. A helper takes the median evidence value for each requirement, and the scoring code aggregates those values. Disagreements remain visible. Three models are not ground truth, but their different readings are useful to inspect.
+
+## Giving the next attempt something to work with
+
+The part I cared about most was connecting evaluation back to the search.
+
+An early HRT candidate rose from 52.2 to 59.6 under that version of the evaluator, while losing evidence on three requirements. If I only passed the total back to the agent, it would look like an uncomplicated win.
+
+I asked for the harness to factor those regressions into the next attempt. The comparator now names the evidence gained and lost, and produces a steer about what the next candidate needs to recover.
+
+That is the difference between a score report and useful feedback. A trade-off can still be worth accepting, but it should not disappear inside an average. With a stricter acceptance policy, regressions can block a candidate altogether.
+
+## A run where the right move was no change
+
+I tested the workflow on HRT and Notion postings, then supplied an Asymptote Capital new-grad role. For that last posting, the baseline and two alternative selections all fit on one page.
+
+<ResumeClimbingVisual kind="results" />
+
+Both alternatives added database and schema evidence. They also removed evidence supporting other requirements, and neither beat the baseline under the evaluator. The workflow rejected them.
+
+That does not prove we found the optimal resume. It means those two proposals did not justify replacing the current version. The useful output was a reason to keep it, plus a clearer account of which requirements were still poorly evidenced.
+
+## What I have now
+
+I have a task-specific evaluation system and a guided hill-climbing harness around it. The parent agent runs the loop: propose a candidate, render it, collect judgments, compare it with the current version, and use the feedback to decide what to try next.
+
+The harness is not an exhaustive search, and I have not measured hiring outcomes. It gives me a way to test changes instead of accepting whichever draft sounds most convincing in the conversation.
+
+For this application, the constraint is straightforward: improve how I present my experience for the job, without pretending I have different experience.
